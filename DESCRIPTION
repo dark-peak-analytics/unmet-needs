@@ -1,0 +1,38 @@
+Package: UnmetNeeds
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R: 
+    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: What the package does (one paragraph).
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Suggests: 
+    DT,
+    mapview,
+    methods (>= 4.3.1),
+    sf (>= 1.0.14),
+    shinydashboard,
+    shinyjs,
+    shinyWidgets,
+    waiter
+Config/testthat/edition: 3
+URL: https://github.com/dark-peak-analytics/unmet-needs
+BugReports: https://github.com/dark-peak-analytics/unmet-needs/issues
+Imports: 
+    assertthat (>= 0.2.1),
+    data.table (>= 1.14.8),
+    ggplot2 (>= 3.4.2),
+    httr (>= 1.4.6),
+    leaflet (>= 2.1.2),
+    leaflet.extras (>= 1.0.0),
+    rlang (>= 1.1.1),
+    rmapshaper (>= 0.5.0),
+    scales,
+    shiny (>= 1.7.4.1),
+    sp (>= 2.0.0)
+Depends: 
+    R (>= 4.3)
+LazyData: true
