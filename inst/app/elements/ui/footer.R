@@ -14,13 +14,13 @@ shiny::div(
     shiny::HTML(
       "<img src= dpa2.png width='60px'>"
       ),
-    style = "margin:0; padding-left:5px;",
+    style = "margin:0; padding:0px; padding-left:10px;",
     align = "right"
   ),
   shiny::column(
-    width = 9,
-    offset = 1,
-    style = "vertical-align: center; margin-top:5px;",
+    width = 8,
+    offset = 2,
+    style = "vertical-align: center; margin-top:13px;",
     align = "left",
     shiny::HTML("A shiny app by:<br> <b>Wael Mohammed</b>"),
     shiny::br(),
