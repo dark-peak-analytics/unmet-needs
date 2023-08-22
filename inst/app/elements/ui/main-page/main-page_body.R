@@ -10,14 +10,20 @@
 shinydashboard::dashboardBody(
   # Hack the shinydashboard heade
   shiny::tags$script(
-    shiny::HTML('
-      $(document).ready(function() {
-      $("header").find(
-      "nav").append(
-      \'<div class="dashboardHeaderClass"> NHS Formula Health Inequality Impact Calculator </div>\');
-      })
-    ')
-    ),
+    shiny::HTML(
+      paste0(
+        '$(document).ready(function() {',
+        '$("header").find(',
+        '"nav").append(',
+        '\'<div ',
+        'class="dashboardHeaderClass',
+        '">',
+        'NHS Formula Health Inequality Impact Calculator',
+        '</div>\');',
+        '})'
+      )
+    )
+  ),
   shinydashboard::tabItems(
     # Create dashboard tabs
     source(

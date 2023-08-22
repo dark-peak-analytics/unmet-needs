@@ -11,7 +11,7 @@ ui_path <- file.path("elements", "ui")
 
 # Create dashboard with tab navigation bar -------------------------------------
 shinydashboard::dashboardSidebar(
-  width = 250,
+  width = 210,
   shinydashboard::sidebarMenu(
     shiny::br(),
     shiny::br(),
