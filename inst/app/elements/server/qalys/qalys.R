@@ -34,24 +34,6 @@ waiter_qalys_table <- waiter::Waiter$new(
   hide_on_render  = TRUE
 )
 
-waiter_qalys_dl_map <- waiter::Waiter$new(
-  id = "download_map",
-  html = shiny::div(
-    style = "
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content:center;
-            background-color: white;
-            opacity: 0.5 !important;
-          ",
-    waiter::spin_loaders(
-      id = 1,
-      color = "#00c0ef"
-    )
-  ),
-  hide_on_render  = FALSE
-)
 # Convert input variables to reactives -----------------------------------------
 
 target_maximum_QALE <- shiny::reactive({
@@ -505,6 +487,8 @@ output[["download_map"]] <- shiny::downloadHandler(
     )
   },
   content = function(file) {
+    shinyjs::disable("download_map")
+    on.exit(shinyjs::enable("download_map"))
     mapview::mapshot(
       file = file,
       x = absolute_QALYs_map() |>
