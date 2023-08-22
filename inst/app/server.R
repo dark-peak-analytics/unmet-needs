@@ -23,7 +23,7 @@ server <- function(input, output, session) {
             align-items: center;
             justify-content:center;
             color: white;
-            width: 600px;
+            width: 700px;
             opacity: 1 !important;
           ",
       shiny::div(
@@ -32,22 +32,21 @@ server <- function(input, output, session) {
             align-items: center;
             justify-content:center;
             color: white;
-            width: 600px;
+            width: 700px;
             opacity: 1 !important;
           ",
         shiny::img(
           src = "logo.svg",
-          # src = "https://www.york.ac.uk/static/stable/img/logo.svg",
           alt = "University of York",
-          height = "60",
-          width = "100",
+          height = "65",
+          width = "130",
           style = "float: left; margin-right: 10px; margin-top: 0px;"
         ),
         shiny::HTML(
-        '<h2 style="color: #000000; padding-top:2px;"
+        '<h2 style="color: #000000; padding-top: 2px; margin-right: 0px;
+        margin-left: 0px;"
         >NHS Formula Health Inequality Impact Calculator</h2>'
         ),
-        # shiny::h1("NHS Formula Health Inequality Impact Calculator"),
       ),
       shiny::HTML(
       '<h4 style="color: #5A5A5A;"
@@ -86,7 +85,7 @@ server <- function(input, output, session) {
             align-items: center;
             justify-content:center;
             color: white;
-            width: 600px;
+            width: 700px;
             opacity: 1 !important;
           ",
         shiny::div(
@@ -95,7 +94,7 @@ server <- function(input, output, session) {
             align-items: center;
             justify-content:center;
             color: white;
-            width: 600px;
+            width: 700px;
             opacity: 1 !important;
           ",
           shiny::img(
@@ -124,8 +123,8 @@ server <- function(input, output, session) {
           id = 8,
           color = "#00c0ef",
           style = "
-        height: 200px;
-        width: 200px;
+        height: 100px;
+        width: 100px;
         "
         ),
         shiny::fluidRow(
@@ -148,7 +147,7 @@ server <- function(input, output, session) {
             align-items: center;
             justify-content:center;
             color: white;
-            width: 600px;
+            width: 700px;
             opacity: 1 !important;
           ",
         shiny::div(
@@ -157,7 +156,7 @@ server <- function(input, output, session) {
             align-items: center;
             justify-content:center;
             color: white;
-            width: 600px;
+            width: 700px;
             opacity: 1 !important;
           ",
           shiny::img(
@@ -186,8 +185,8 @@ server <- function(input, output, session) {
           id = 8,
           color = "#00c0ef",
           style = "
-        height: 200px;
-        width: 200px;
+        height: 100px;
+        width: 100px;
         "
         ),
         shiny::fluidRow(

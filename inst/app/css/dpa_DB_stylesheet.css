@@ -162,27 +162,21 @@ h3 {
 
 /* dashboard header */
 .dashboardHeaderClass {
-  font-size: 30px;
-  /* font-weight: bold; */
-  line-height: 95%;
-  line-height: 50px;
-  text-align: left;
-  font-family: Arial, sans-serif;
-  padding-top: 4px;
-  /* padding: 0 15px; */
-  overflow: hidden;
-  /* color: #00c0ef; */
-  color: black;
+    float: none;
+    font-size: 30px;
+    font-weight: bold;
+    line-height: 95%;
+    line-height: 50px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    padding-top: 4px;
+    overflow: hidden;
+    color: black;
+    padding-right: 19%;
+    padding-left: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
 }
-
-/*.myClass {
-  line-height: 50px;
-  text-align: center;
-  font-family: "Arial";
-  padding: 0 15px;
-  color: black;
-  font-size: 2vw;
-}*/
 
 /* dataTable object */
 .dataTable {
@@ -274,7 +268,8 @@ body {
     color: #00000000;
 }
 
-/* The following code moves the collapse controller to the left, but interferes with other action buttons in the title */
+/* The following code moves the collapse controller to the left,
+but interferes with other action buttons in the title */
 /* .box-header>.box-tools {
     position: absolute;
     left: 10px;
@@ -313,3 +308,22 @@ body {
       left: 0px; */
       background-color: #ffffff !important;
 }
+
+/* Changing main header settings */
+.main-header .logo {
+    -webkit-transition: width .3s ease-in-out;
+    -o-transition: width .3s ease-in-out;
+    transition: width .3s ease-in-out;
+    display: block;
+    float: left;
+    height: 65px;
+    font-size: 20px;
+    line-height: 50px;
+    text-align: center;
+    width: 230px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    padding: 0 15px;
+    font-weight: 300;
+    overflow: hidden;
+}
+

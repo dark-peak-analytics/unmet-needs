@@ -12,7 +12,9 @@ shiny::div(
   shiny::column(
     width = 2,
     shiny::HTML(
-      "<img src= dpa2.png width='60px'>"
+      "<a href= href='https://www.darkpeakanalytics.com/'>
+      <img src= dpa2.png width='60px'>
+      </a>"
       ),
     style = "margin:0; padding:0px; padding-left:10px;",
     align = "right"
