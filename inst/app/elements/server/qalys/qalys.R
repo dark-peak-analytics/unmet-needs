@@ -100,8 +100,7 @@ output[["title_average_QALYs"]] <- shiny::renderUI(
           outputId = "download_plot",
           label = "",
           icon = shiny::icon(
-            name = "file-image",
-            class = "fa-regular fa-file-image fa-beat-fade"
+            name = "file-image"
           ),
           style = "float: right!important; position: absolute; right: 5px;
           top: 5px; border-color: #00c0ef; margin-right: 0px"
@@ -327,8 +326,7 @@ output[["title_map_absolute_QALYs"]] <- shiny::renderUI(
           outputId = "download_map",
           label = "",
           icon = shiny::icon(
-            name = "file-image",
-            class = "fa-regular fa-file-image fa-beat-fade"
+            name = "file-image"
           ),
           style = "float: right!important; position: absolute; right: 5px;
           top: 5px; border-color: #00c0ef; margin-right: 0px"
@@ -373,8 +371,7 @@ output[["title_table_absolute_QALYs"]] <- shiny::renderUI(
           outputId = "download_table",
           label = "",
           icon = shiny::icon(
-            name = "file-csv",
-            class = "fa-solid fa-file-csv fa-beat-fade"
+            name = "file-csv"
           ),
           style = "float: right!important; position: absolute; right: 5px;
           top: 5px; border-color: #00c0ef; margin-right: 0px"
