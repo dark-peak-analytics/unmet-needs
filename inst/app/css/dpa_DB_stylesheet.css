@@ -1,0 +1,329 @@
+.continue {
+color: white;
+font-size: 36px;
+line-height: 1.25;
+background: #00c0ef linear-gradient(180deg, #00c0ef 0%, #00c0ef 100%);
+background-image: linear-gradient(rgb(0, 192, 239) 0%, rgb(0, 192, 239) 100%);
+background-position-x: initial;
+background-position-y: initial;
+background-size: initial;
+background-repeat-x: initial;
+background-repeat-y: initial;
+background-attachment: initial;
+background-origin: initial;
+background-clip: initial;
+background-color: rgb(0, 192, 239);
+overflow: hidden;
+position: relative;
+text-align: center;
+height: 50px;
+width: 100%;
+}
+
+/* logo */
+.skin-blue .main-header .logo, skin-blue {
+background-color: white;
+}
+
+/* buttons */
+btn-default.focus, .btn-default:focus, .btn-default:hover {
+color: black;
+background-color: #00c0ef;
+border-color: #00c0ef;
+}
+.btn-info, .btn-info:hover {
+color: #00c0ef;
+background-color: #F9EC6E;
+border-color: #F9EC6E;}
+.btn-info.active, .btn-info:active, .btn-info.active:hover, .open>.dropdown-toggle.btn-info {
+color: #F9EC6E;
+background-color: #00c0ef;
+background-image: none;
+border-color: #00c0ef;
+}
+
+
+/* logo when hovered */
+.skin-blue .main-header .logo:hover {
+background-color: white;
+}
+
+/* navbar (rest of the header) */
+.skin-blue .main-header .navbar {
+background-color: white;
+}
+
+/* main sidebar */
+.skin-blue .main-sidebar {
+background-color: white;
+border-right-color: #00c0ef;
+border-right-width: 1px;
+border-right-style: solid;
+}
+
+/* active selected tab in the sidebarmenu */
+.skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
+background-color: white;
+border-left-color: white;
+color: #00c0ef
+}
+
+/* other links in the sidebarmenu */
+.skin-blue .main-sidebar .sidebar .sidebar-menu a{
+background-color: white;
+color: black;
+}
+
+ /* other links in the sidebarmenu when hovered */
+ .skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
+ background-color: white;
+ border-left-color: white;
+ color: #00c0ef
+ }
+ /* toggle button  */
+ .skin-blue .main-header .navbar .sidebar-toggle{
+ background-color: white;
+ color: #00c0ef
+ }
+.skin-blue .main-header .navbar .sidebar-toggle:hover{
+ background-color: white;
+ color: #00c0ef
+}
+
+/* d3tree2 */
+.d3tree2 text {
+  pointer-events: none;
+  font-size: 12pt;
+  font-family: Arial, sans-serif;
+}
+
+.d3tree2 .grandparent text {
+  font-weight: bold;
+  font-size: inherit;
+  font-family: Arial, sans-serif;
+}
+
+.btn-default {
+  font-size: 12pt;
+  line-height: 1.5em;
+  font-family: Arial, sans-serif;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.control-label {
+  font-size: 12pt;
+  font-weight: bold;
+  line-height: 1.5em;
+  font-family: Arial, sans-serif;
+}
+
+/* headers */
+h1 {
+  color: #00c0ef;
+  text-align: left;
+  line-height: 1.5em;
+  font-size: 25pt;
+  font-weight: bold;
+}
+
+h2 {
+  color: #822433;
+  text-align: left;
+  line-height: 1.5em;
+  font-size: 16pt;
+  font-weight: bold;
+}
+
+h3 {
+  color: #000000;
+  line-height: 1.5em;
+  text-align: left;
+  font-size: 12pt;
+  font-weight: bold;
+}
+/* button in header */
+.btn-default {
+    background-color: white;
+    color: #000000;
+    border-color: white;
+    text-align: center;
+    margin: 0px 20px 0px 30px;
+}
+
+/* shinydashboard box header border color */
+/* .box-header {
+  border-top: 1px solid red;
+} */
+
+.box.box-info {
+    border-top-color: #00c0ef;
+}
+
+/* dashboard header */
+.dashboardHeaderClass {
+    float: none;
+    font-size: 30px;
+    font-weight: bold;
+    line-height: 95%;
+    line-height: 50px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    padding-top: 4px;
+    overflow: hidden;
+    color: black;
+    padding-right: 19%;
+    padding-left: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+/* dataTable object */
+.dataTable {
+  font-size: 12pt;
+  line-height: 95%;
+  width: 100%;
+  margin: 0 auto;
+  clear: both;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* navigation bar - where pages/navpages/panelsets title are located*/
+.navbar {
+  position: relative;
+  margin-bottom: 0 !important;
+  width: 100%;
+}
+
+/* body */
+body {
+  font-size: 12pt;
+  line-height: 1.5em;
+  font-family: Arial, sans-serif;
+  margin-left: 0;
+  margin-right: 0;
+}
+.content-wrapper {
+  background-color: white;
+  color: black;
+  font-family: Arial, sans-serif;
+}
+.skin-blue .wrapper {
+    background-color: white;
+}
+
+/* Tabs */
+.nav-tabs-custom>.nav-tabs>li.active, .nav-tabs-custom>.nav-tabs>li.active:focus, .nav-tabs-custom>.nav-tabs>li.active:hover {
+    color: black;
+    /* font-family: Arial, sans-serif; */
+    /* font-weight: bold; */
+    cursor: default;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-top-color: #00c0ef;
+}
+.nav-tabs-custom>.nav-tabs>li.active, .nav-tabs-custom>.nav-tabs>li.active>a, .nav-tabs-custom>.nav-tabs>li.active:hover{
+    border-top-color: #00c0ef;
+    color: #00c0ef;
+}
+
+/* containers for inputs */
+.center-input-container {
+  display: block;
+  text-align: center;
+  justify-content: center;
+}
+.center-input {
+  text-align: center;
+  margin: 0 10px;
+}
+
+
+/* footer of sidebar */
+.nav_foot {
+    width: 100%;
+    font-size: 10pt;
+    line-height: 20px;
+    vertical-align: center;
+    margin-top: -15px;
+    margin-bottom: -10px;
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+    color: black;
+}
+
+/* sidebar text */
+.skin-blue .sidebar a {
+    color: black;
+    text-align: center;
+}
+
+/* make collapse controller icon color to (trasparent) to hide it */
+.btn-box-tool {
+    padding: 5px;
+    font-size: 12px;
+    background: 0 0;
+    color: #00000000;
+}
+
+/* The following code moves the collapse controller to the left,
+but interferes with other action buttons in the title */
+/* .box-header>.box-tools {
+    position: absolute;
+    left: 10px;
+    top: 15px;
+} */
+
+/* copyrigh footer */
+.copyright{
+     position:fixed;
+     white-space: nowrap;
+     bottom:20px;
+     left:20px;
+     top: auto;
+     right: auto;
+     font-size: 8pt;
+     font-weight: 150;
+     line-height: 14px;
+     z-index: 99;
+     width: 180px;
+     height: 73px;
+     vertical-align: center;
+     padding:3px;
+     padding-right:0px;
+     padding-left:0px;
+     border-radius: 10px;
+     /*border: 1px solid #0E213A;*/
+     box-shadow: 0 8px 30px 0 rgba(0,0,0,0.2);
+}
+
+/* Waiter */
+.waiter-overlay  {
+/*    position: fixed;
+      height: 919px;
+      width: 1375px;
+      top: 0px;
+      left: 0px; */
+      background-color: #ffffff !important;
+}
+
+/* Changing main header settings */
+.main-header .logo {
+    -webkit-transition: width .3s ease-in-out;
+    -o-transition: width .3s ease-in-out;
+    transition: width .3s ease-in-out;
+    display: block;
+    float: left;
+    height: 65px;
+    font-size: 20px;
+    line-height: 50px;
+    text-align: center;
+    width: 230px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    padding: 0 15px;
+    font-weight: 300;
+    overflow: hidden;
+}
+
