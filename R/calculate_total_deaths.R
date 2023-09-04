@@ -1,20 +1,18 @@
 ################################################################################
 #
-# Script Name:        calculate_absolute_QALYs.R
-# Script Description: Defines the function calculate_absolute_QALYs(). This
-#                     function estimates the absolute Quality-Adjusted Life
-#                     Years (QALY).
+# Script Name:        calculate_total_deaths.R
+# Script Description: Defines the function calculate_total_deaths(). This
+#                     function estimates the number of deaths per healthcare
+#                     provider by deprivation quintile.
 #
 ################################################################################
 
-#' @title Calculate Absolute Quality-Adjusted Life Years (QALYs).
-#' @description Estimates the absolute Quality-Adjusted Life Year (QALY) per
-#' deprivation quintile.
-#' @details This function takes ... inputs and then ... to estimate the absolute
-#' QALYs.
-#' @param target_maximum_health_ Numeric vector specifying the target maximum QALE
-#' for low (GBD study), mid and high (maximum lifespan).
-#' @param baseline_health_ Numeric vector specifying the baseline health per
+#' @title Calculate the Total Number of Deaths by healthcare provider.
+#' @description Estimates the total number of deaths per deprivation quintile in
+#' each geographical area with a designated healthcare provider.
+#' @details This function takes ... inputs and then ... to estimate the total
+#' number of deaths.
+#' @param mortality_rates_ Numeric vector specifying the baseline health per
 #' quintile. Default value from PAPER 1 representing EQ5D-5L results.
 #' @param mortality_elasticity_ Numeric vector specifying the mortality
 #' elasticity per deprivation quintile.
@@ -32,26 +30,23 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' absolute_QALYs <- calculate_absolute_QALYs(
-#'   target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
-#'   baseline_health_ = input_data_mQALE$`Baseline health`,
+#' total_deaths <- calculate_total_deaths(
+#'   mortality_rates_ = input_data_mQALE$`Mortality rate`,
 #'   mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
 #'   option_ = "estimated_mortality_elasticity",
 #'   imd_population_ = CCG_IMD_population_2019,
 #'   provider_ = "CCG"
 #' )
-#' absolute_QALYs_equ_elas <- calculate_absolute_QALYs(
-#'   target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
-#'   baseline_health_ = input_data_mQALE$`Baseline health`,
+#' total_deaths_equ_elas <- calculate_total_deaths(
+#'   mortality_rates_ = input_data_mQALE$`Mortality rate`,
 #'   mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
 #'   option_ = "equal_mortality_elasticity",
 #'   imd_population_ = CCG_IMD_population_2019,
 #'   provider_ = "CCG"
 #' )
 #' }
-calculate_absolute_QALYs <- function(
-    target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
-    baseline_health_ = input_data_mQALE$`Baseline health`,
+calculate_total_deaths <- function(
+    mortality_rates_ = input_data_mQALE$`Mortality rate`,
     mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
     option_ = "estimated_mortality_elasticity",
     imd_population_ = CCG_IMD_population_2019,
