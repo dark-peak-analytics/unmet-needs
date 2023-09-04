@@ -12,6 +12,8 @@
 #' deprivation quintile.
 #' @details This function takes ... inputs and then ... to estimate the absolute
 #' QALYs.
+#' @param target_maximum_health_ Numeric vector specifying the target maximum QALE
+#' for low (GBD study), mid and high (maximum lifespan).
 #' @param baseline_health_ Numeric vector specifying the baseline health per
 #' quintile. Default value from PAPER 1 representing EQ5D-5L results.
 #' @param mortality_elasticity_ Numeric vector specifying the mortality
@@ -23,13 +25,32 @@
 #' @param imd_population_ Dataframe with population distribution by deprivation.
 #' @param provider_ String specifying whether the provider was CCG or ICS?ICB.
 #'
-#' @return A dataframe.
+#' @return A list containing dataframe(s).
 #'
 #' @importFrom data.table := .SD
 #'
 #' @export
-#'
+#' @examples
+#' \dontrun{
+#' absolute_QALYs <- calculate_absolute_QALYs(
+#'   target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
+#'   baseline_health_ = input_data_mQALE$`Baseline health`,
+#'   mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+#'   option_ = "estimated_mortality_elasticity",
+#'   imd_population_ = CCG_IMD_population_2019,
+#'   provider_ = "CCG"
+#' )
+#' absolute_QALYs_equ_elas <- calculate_absolute_QALYs(
+#'   target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
+#'   baseline_health_ = input_data_mQALE$`Baseline health`,
+#'   mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+#'   option_ = "equal_mortality_elasticity",
+#'   imd_population_ = CCG_IMD_population_2019,
+#'   provider_ = "CCG"
+#' )
+#' }
 calculate_absolute_QALYs <- function(
+    target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
     baseline_health_ = input_data_mQALE$`Baseline health`,
     mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
     option_ = "estimated_mortality_elasticity",
@@ -37,7 +58,6 @@ calculate_absolute_QALYs <- function(
     provider_ = "CCG") {
 
   ## Sanity checks:
-  ### Expect objects of equal length
   assertthat::assert_that(
     is.numeric(baseline_health_),
     is.numeric(mortality_elasticity_),
@@ -72,9 +92,23 @@ calculate_absolute_QALYs <- function(
   baseline_health <- c(baseline_health_, "Average" = mean(baseline_health_))
   elasticities <- c(elasticities, "Average" = mean(elasticities))
 
+  ## Calculate baseline health burden (estimated in QALE at birth):
+  baseline_health_burden <- lapply(
+    X = target_maximum_health_,
+    FUN = function(max_QALE_) {
+      values <- max_QALE_ - baseline_health[quintile_names]
+      c(values, "Average" = mean(values))
+    }
+  )
+
   ## Calculate QALY gain per person per IMD quintile:
-  QALY_gain <- baseline_health[quintile_names] * elasticities[quintile_names]
-  QALY_gain <- c(QALY_gain, "Average" = mean(QALY_gain))
+  QALY_gain <- lapply(
+    X = baseline_health_burden,
+    FUN = function(QALE_burden_) {
+      values <- QALE_burden_[quintile_names] * elasticities[quintile_names]
+      c(values, "Average" = mean(values))
+    }
+  )
 
   if(is.null(imd_population_)) {
 
@@ -87,31 +121,35 @@ calculate_absolute_QALYs <- function(
   } else {
     ## Estimate gain due to expenditure change:
     QALY_gain_imd_pop <- data.table::as.data.table(imd_population_)
-    QALY_gain_imd_pop[
-      ,
-      (quintile_names) := lapply(
-        X = quintile_names,
-        FUN = function(.x) {
-          .SD[[.x]] * QALY_gain[.x] *
-            QALY_gain_imd_pop[["Expenditure change (%)"]]
-        }
-      ),
-      .SDcols = quintile_names
-    ][
-      ,
-      total_change := rowSums(.SD, na.rm = TRUE),
-      .SDcols = quintile_names
-    ][
-      ,
-      "Average change (100,000 population)" :=
-        (total_change / `Overall population`) * 1e5
-    ]
+    QALY_gain_imd_pop_data <- lapply(
+      X = QALY_gain,
+      FUN = function(QALY_gain_) {
+        QALY_gain_imd_pop[
+          ,
+          (quintile_names) := lapply(
+            X = quintile_names,
+            FUN = function(.x) {
+              .SD[[.x]] * QALY_gain_[.x] *
+                QALY_gain_imd_pop[["Expenditure change (%)"]]
+            }
+          ),
+          .SDcols = quintile_names
+        ][
+          ,
+          total_change := rowSums(.SD, na.rm = TRUE),
+          .SDcols = quintile_names
+        ][
+          ,
+          "Average change (100,000 population)" :=
+            (total_change / `Overall population`) * 1e5
+        ]
 
-    QALY_gain_imd_pop <- QALY_gain_imd_pop |>
-      replace(
-        list = is.na(QALY_gain_imd_pop),
-        values = 0
-      )
+        QALY_gain_imd_pop <- QALY_gain_imd_pop |>
+          replace(
+            list = is.na(QALY_gain_imd_pop),
+            values = 0
+          )
+      })
 
     return(
       list(
@@ -119,7 +157,7 @@ calculate_absolute_QALYs <- function(
           "Results",
           if(!is.null(provider_)) paste0(" by ", provider_) else NULL
         ),
-        "data" = QALY_gain_imd_pop
+        "data" = QALY_gain_imd_pop_data
       )
     )
   }

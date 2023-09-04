@@ -55,7 +55,7 @@ shiny::observe({
       option_ = maximum_QALE_option(),
       imd_population_ = imd_pop_data,
       provider_ = inputs_rv[["entity"]]
-    )$data,
+    )$data[[1]],
     imd_population_ = imd_pop_data
   )
 })
@@ -163,7 +163,7 @@ absolute_QALYs_map <- shiny::reactive({
   shiny::req(absolute_QALYs[["national"]])
 
   # Create_map() function expects the main outcome data to be under column Value
-  value_df <- absolute_QALYs[["national"]]$data
+  value_df <- absolute_QALYs[["national"]]$data[[1]]
   names(value_df)[
     names(value_df) == "Average change (100,000 population)"] <- "Value"
 
@@ -232,7 +232,16 @@ absolute_QALYs_map <- shiny::reactive({
 absolute_QALYs_df_data <- shiny::reactive({
   shiny::req(absolute_QALYs[["national"]])
 
-  df_colnames <- colnames(absolute_QALYs[["national"]][["data"]])
+  df_colnames <- colnames(absolute_QALYs[["national"]][["data"]][[1]])
+
+  tot_pop_names <-  df_colnames |>
+    grep(
+      x = _,
+      pattern = "Overall population",
+      ignore.case = TRUE,
+      value = TRUE
+    )
+
   nhs_org_names <-  df_colnames |>
     grep(
       x = _,
@@ -265,10 +274,10 @@ absolute_QALYs_df_data <- shiny::reactive({
       value = TRUE
     )
 
-  tmp_table <- absolute_QALYs[["national"]][["data"]] |>
+  tmp_table <- absolute_QALYs[["national"]][["data"]][[1]] |>
     subset(
-      select = c(nhs_org_names, avg_outcome_name, total_outcome_name,
-                 quantile_names)
+      select = c(nhs_org_names, tot_pop_names, avg_outcome_name,
+                 total_outcome_name, quantile_names)
     )
 
   # Create a vector of numeric column names
@@ -282,6 +291,7 @@ absolute_QALYs_df_data <- shiny::reactive({
 
   names(tmp_table) <- c(
     inputs_rv[["entity"]],
+    "Total population",
     avg_outcome_name,
     "Total QALY change",
     quantile_names

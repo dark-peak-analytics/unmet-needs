@@ -5,6 +5,7 @@
 \title{Calculate Absolute Quality-Adjusted Life Years (QALYs).}
 \usage{
 calculate_absolute_QALYs(
+  target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
   baseline_health_ = input_data_mQALE$`Baseline health`,
   mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
   option_ = "estimated_mortality_elasticity",
@@ -13,6 +14,9 @@ calculate_absolute_QALYs(
 )
 }
 \arguments{
+\item{target_maximum_health_}{Numeric vector specifying the target maximum QALE
+for low (GBD study), mid and high (maximum lifespan).}
+
 \item{baseline_health_}{Numeric vector specifying the baseline health per
 quintile. Default value from PAPER 1 representing EQ5D-5L results.}
 
@@ -29,7 +33,7 @@ respectively.}
 \item{provider_}{String specifying whether the provider was CCG or ICS?ICB.}
 }
 \value{
-A dataframe.
+A list containing dataframe(s).
 }
 \description{
 Estimates the the absolute Quality-Adjusted Life Year (QALY) per
@@ -38,4 +42,24 @@ deprivation quintile.
 \details{
 This function takes ... inputs and then ... to estimate the absolute
 QALYs.
+}
+\examples{
+\dontrun{
+absolute_QALYs <- calculate_absolute_QALYs(
+  target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
+  baseline_health_ = input_data_mQALE$`Baseline health`,
+  mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+  option_ = "estimated_mortality_elasticity",
+  imd_population_ = CCG_IMD_population_2019,
+  provider_ = "CCG"
+)
+absolute_QALYs_equ_elas <- calculate_absolute_QALYs(
+  target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
+  baseline_health_ = input_data_mQALE$`Baseline health`,
+  mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+  option_ = "equal_mortality_elasticity",
+  imd_population_ = CCG_IMD_population_2019,
+  provider_ = "CCG"
+)
+}
 }

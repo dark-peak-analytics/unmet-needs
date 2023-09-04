@@ -6,7 +6,7 @@
 Quintile.}
 \usage{
 calculate_average_QALYs(
-  absolute_QALYs_ = UnmetNeeds::calculate_absolute_QALYs()$data,
+  absolute_QALYs_ = UnmetNeeds::calculate_absolute_QALYs()$data[[1]],
   imd_population_ = CCG_IMD_population_2019
 )
 }
@@ -26,4 +26,30 @@ deprivation quintile.
 \details{
 This function takes ... inputs and then ... to estimate the average
 QALYs.
+}
+\examples{
+\dontrun{
+average_QALYs <- calculate_average_QALYs(
+  absolute_QALYs_ = calculate_absolute_QALYs(
+    target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
+    baseline_health_ = input_data_mQALE$`Baseline health`,
+    mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+    option_ = "estimated_mortality_elasticity",
+    imd_population_ = CCG_IMD_population_2019,
+    provider_ = "CCG"
+  )$data[[1]],
+  imd_population_ = CCG_IMD_population_2019
+)
+average_QALYs_equ_elas <- calculate_average_QALYs(
+  absolute_QALYs_ = calculate_absolute_QALYs(
+    target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
+    baseline_health_ = input_data_mQALE$`Baseline health`,
+    mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+    option_ = "equal_mortality_elasticity",
+    imd_population_ = CCG_IMD_population_2019,
+    provider_ = "CCG"
+  )$data[[1]],
+  imd_population_ = CCG_IMD_population_2019
+)
+}
 }
