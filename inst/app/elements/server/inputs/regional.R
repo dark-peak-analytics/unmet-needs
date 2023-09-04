@@ -83,7 +83,6 @@ shiny::observeEvent(
 
       inputs_rv[["IMD_population"]] <- IMD_data |>
         subset(CCG19NM %in% input$ccgs)
-
     }
   }
 )

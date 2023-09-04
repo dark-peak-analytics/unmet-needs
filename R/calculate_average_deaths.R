@@ -1,19 +1,18 @@
 ################################################################################
 #
-# Script Name:        calculate_average_QALYs.R
-# Script Description: Defines the function calculate_average_QALYs(). This
-#                     function estimates the average Quality-Adjusted Life
-#                     Years (QALY) gained by deprivation quintile.
+# Script Name:        calculate_average_deaths.R
+# Script Description: Defines the function calculate_average_deaths(). This
+#                     function estimates the average number of lives saved per
+#                     100,000 population by deprivation quintile.
 #
 ################################################################################
 
-#' @title Calculate Average Quality-Adjusted Life Years (QALYs) by Deprivation
-#' Quintile.
+#' @title Calculate Average Number of Deaths Prevented by Deprivation Quintile.
 #' @description Estimates the the average Quality-Adjusted Life Year (QALY) per
 #' deprivation quintile.
 #' @details This function takes ... inputs and then ... to estimate the average
 #' QALYs.
-#' @param absolute_QALYs_ Dataframe or data table representing the outputs of
+#' @param total_lives_saved_ Dataframe or data table representing the outputs of
 #' the \link[UnmetNeeds]{calculate_absolute_QALYs}.
 #' @param imd_population_ Dataframe with population distribution by deprivation.
 #'
@@ -22,46 +21,44 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' average_QALYs <- calculate_average_QALYs(
-#'   absolute_QALYs_ = calculate_absolute_QALYs(
-#'     target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
-#'     baseline_health_ = input_data_mQALE$`Baseline health`,
+#' average_deaths <- calculate_average_deaths(
+#'   total_lives_saved_ = calculate_total_deaths(
+#'     mortality_rates_ = input_data_mQALE$`Mortality rate`,
 #'     mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
 #'     option_ = "estimated_mortality_elasticity",
 #'     imd_population_ = CCG_IMD_population_2019,
 #'     provider_ = "CCG"
-#'   )$data[[1]],
+#'   )$data,
 #'   imd_population_ = CCG_IMD_population_2019
 #' )
-#' average_QALYs_equ_elas <- calculate_average_QALYs(
-#'   absolute_QALYs_ = calculate_absolute_QALYs(
-#'     target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
-#'     baseline_health_ = input_data_mQALE$`Baseline health`,
+#' average_deaths_equ_elas <- calculate_average_deaths(
+#'   total_lives_saved_ = calculate_total_deaths(
+#'     mortality_rates_ = input_data_mQALE$`Mortality rate`,
 #'     mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
 #'     option_ = "equal_mortality_elasticity",
 #'     imd_population_ = CCG_IMD_population_2019,
 #'     provider_ = "CCG"
-#'   )$data[[1]],
+#'   )$data,
 #'   imd_population_ = CCG_IMD_population_2019
 #' )
 #' }
-calculate_average_QALYs <- function(
-    absolute_QALYs_ = UnmetNeeds::calculate_absolute_QALYs()$data[[1]],
+calculate_average_deaths <- function(
+    total_lives_saved_ = UnmetNeeds::calculate_total_deaths()$data,
     imd_population_ = CCG_IMD_population_2019) {
 
   ## Auxiliary data:
   quintile_names <- grep(
     pattern = "Q",
-    x = colnames(absolute_QALYs_),
+    x = colnames(total_lives_saved_),
     ignore.case = TRUE,
     value = TRUE
   )
   total_pop_quintile <- colSums(imd_population_[, quintile_names])
-  total_QALYs_change_quintile <- colSums(absolute_QALYs_[, ..quintile_names])
+  total_lives_saved_quintile <- colSums(total_lives_saved_[, ..quintile_names])
 
-  ## Estimate average QALYs change per quintile:
-  average_QALYs_change_quintile <-
-    (total_QALYs_change_quintile / total_pop_quintile) * 1e5
+  ## Estimate average deaths per quintile:
+  average_deaths_quintile <-
+    (total_lives_saved_quintile / total_pop_quintile) * 1e5
 
   return(
     list(
@@ -69,16 +66,16 @@ calculate_average_QALYs <- function(
         "Average Health Impact by Deprivation Quintile"
       ),
       "subtitle" = paste0(
-        "Quality-Adjusted Life Years (QALYs) per 100,000 Population in Quintile"
+        "Lives saved per 100,000 Population in Quintile"
       ),
       "caption" = paste0(
-        "Average QALYs estimated assuming ",
+        "Deaths prevented are estimated assuming ",
         imd_population_$`Expenditure change (%)`[[1]],
         "% change in national healthcare expenditure."
       ),
       "data" = data.table::data.table(
         "Deprivation Quintile" = names(total_pop_quintile),
-        "Average change in QALYs" = average_QALYs_change_quintile |>
+        "Deaths prevented" = average_deaths_quintile |>
           unname()
       )
     )

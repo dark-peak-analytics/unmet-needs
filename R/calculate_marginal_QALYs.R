@@ -12,7 +12,7 @@
 #' Life Years (QALYs) from the Quality-Adjusted Life Expectancy (QALE).
 #' @details This function takes ... inputs and then ... to estimate the marginal
 #' QALE per deprivation quintile and then the marginal QALYs.
-#' @param target_maximum_QALE_ Numeric vector specifying the target maximum QALE
+#' @param target_maximum_health_ Numeric vector specifying the target maximum QALE
 #' for low (GBD study), mid and high (maximum lifespan).
 #' @param baseline_health_ Numeric vector specifying the baseline health per
 #' quintile. Default value from PAPER 1 representing EQ5D-5L results.
@@ -30,16 +30,29 @@
 #' @export
 #'
 calculate_marginal_QALYs <- function(
-    target_maximum_QALE_ = input_data_mQALE$`Target maximum QALE`,
+    target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
     baseline_health_ = input_data_mQALE$`Baseline health`,
     mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
     option_ = "estimated_mortality_elasticity",
     expenditure_change_ = 1) {
 
   ## Sanity checks:
-  ### Expect objects of equal length
-  assertthat::are_equal(
-    length(baseline_health_), mortality_elasticity_
+  assertthat::assert_that(
+    is.numeric(baseline_health_),
+    is.numeric(mortality_elasticity_),
+    assertthat::are_equal(
+      length(baseline_health_), length(mortality_elasticity_)
+    ),
+    assertthat::are_equal(
+      length(baseline_health_), 5
+    ),
+    msg = paste(
+      "The vectors passed to baseline_health_ and/or mortality_elasticity_",
+      "arguments are not numeric, of equal length or of length 5. Please ensure",
+      "that each object is a named numric vector of length five representing",
+      "the values corresponding to each deprivation quintile, starting with Q1",
+      "(the most deprived)."
+    )
   )
 
   ## Auxiliary data:
@@ -60,7 +73,7 @@ calculate_marginal_QALYs <- function(
 
   ## Calculate QALE burden:
   QALE_burden <- lapply(
-    X = target_maximum_QALE_,
+    X = target_maximum_health_,
     FUN = function(max_QALE_) {
       max_QALE_ - baseline_health
     }
@@ -98,7 +111,7 @@ calculate_marginal_QALYs <- function(
         "Estimated asusming a ",
         expenditure_change_,
         "% change in expenditure, and maximum QALE = ",
-        target_maximum_QALE_,
+        target_maximum_health_,
         "."
       ),
       "data" = QALY_marginal_levels

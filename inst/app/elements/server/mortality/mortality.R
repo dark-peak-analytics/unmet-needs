@@ -1,14 +1,14 @@
 ################################################################################
 #
-# Script Name:        qalys.R
+# Script Name:        mortality.R
 # Module Name:        server
 #
 ################################################################################
 
 # Define a waiter object
 
-waiter_qalys_plot <- waiter::Waiter$new(
-  id = "plot_average_QALYs",
+waiter_deaths_plot <- waiter::Waiter$new(
+  id = "plot_average_deaths",
   html = waiter::spin_loaders(
     id = 1,
     color = "#00c0ef"
@@ -16,8 +16,8 @@ waiter_qalys_plot <- waiter::Waiter$new(
   hide_on_render  = TRUE
 )
 
-waiter_qalys_map <- waiter::Waiter$new(
-  id = "map_absolute_QALYs",
+waiter_deaths_map <- waiter::Waiter$new(
+  id = "map_total_deaths",
   html = waiter::spin_loaders(
     id = 1,
     color = "#00c0ef"
@@ -25,8 +25,8 @@ waiter_qalys_map <- waiter::Waiter$new(
   hide_on_render  = TRUE
 )
 
-waiter_qalys_table <- waiter::Waiter$new(
-  id = "table_absolute_QALYs",
+waiter_deaths_table <- waiter::Waiter$new(
+  id = "table_total_deaths",
   html = waiter::spin_loaders(
     id = 1,
     color = "#00c0ef"
@@ -34,53 +34,46 @@ waiter_qalys_table <- waiter::Waiter$new(
   hide_on_render  = TRUE
 )
 
-# Convert input variables to reactives -----------------------------------------
+# Estimate Total Deaths --------------------------------------------------------
 
-target_maximum_QALE <- shiny::reactive({
-  inputs_rv[["HRQoL_inputs_2"]][input$target_maximum_QALE |> unname(),]
-})
-
-# Estimate Average QALYs -------------------------------------------------------
-
-average_QALYs <- shiny::reactiveValues()
+average_lives_saved <- shiny::reactiveValues()
 
 shiny::observe({
   imd_pop_data <- inputs_rv[["IMD_population"]]
   imd_pop_data[["Expenditure change (%)"]] <- input$pcnt_change
 
-  average_QALYs[["data"]] <- UnmetNeeds::calculate_average_QALYs(
-    absolute_QALYs_ = UnmetNeeds::calculate_absolute_QALYs(
-      target_maximum_health_ = target_maximum_QALE(),
-      baseline_health_ = inputs_rv[["baseline_health"]],
+  average_lives_saved[["data"]] <- UnmetNeeds::calculate_average_deaths(
+    total_lives_saved_ = UnmetNeeds::calculate_total_deaths(
+      mortality_rates_ = inputs_rv[["mortality_rates"]],
       mortality_elasticity_ = inputs_rv[["mortality_elasticity"]],
       option_ = maximum_QALE_option(),
       imd_population_ = imd_pop_data,
       provider_ = inputs_rv[["entity"]]
-    )$data[[1]],
+    )$data,
     imd_population_ = imd_pop_data
   )
 })
 
 shiny::observe({
-  average_QALYs[["plot"]] <- UnmetNeeds::plot_average_QALYs(
-    average_QALYs_ = average_QALYs[["data"]]
+  average_lives_saved[["plot"]] <- UnmetNeeds::plot_average_deaths(
+    average_lives_saved_ = average_lives_saved[["data"]]
   )
 })
 
-# Render Average QALYs outputs -------------------------------------------------
+# Render Average Deaths outputs ------------------------------------------------
 
-output[["title_average_QALYs"]] <- shiny::renderUI(
+output[["title_average_deaths"]] <- shiny::renderUI(
   expr = {
-    shiny::req(average_QALYs[["data"]])
+    shiny::req(average_lives_saved[["data"]])
 
     shiny::tagList(
       paste0(
-        average_QALYs[["data"]][["title"]]
+        average_lives_saved[["data"]][["title"]]
       ),
       shiny::tags$div(
         title = "Download Plot",
         shiny::downloadButton(
-          outputId = "download_plot",
+          outputId = "download_deaths_plot",
           label = "",
           icon = shiny::icon(
             name = "file-image"
@@ -93,23 +86,23 @@ output[["title_average_QALYs"]] <- shiny::renderUI(
   }
 )
 
-output[["subtitle_average_QALYs"]] <- shiny::renderText(
+output[["subtitle_average_deaths"]] <- shiny::renderText(
   expr = {
-    shiny::req(average_QALYs[["data"]])
+    shiny::req(average_lives_saved[["data"]])
 
     paste0(
-      average_QALYs[["data"]][["subtitle"]]
+      average_lives_saved[["data"]][["subtitle"]]
     )
   }
 )
 
-output[["plot_average_QALYs"]] <- shiny::renderPlot(
+output[["plot_average_deaths"]] <- shiny::renderPlot(
   expr = {
-    shiny::req(average_QALYs[["plot"]])
+    shiny::req(average_lives_saved[["plot"]])
 
-    waiter_qalys_plot$show()
+    waiter_deaths_plot$show()
 
-    average_QALYs[["plot"]]$data +
+    average_lives_saved[["plot"]]$data +
       ggplot2::labs(
         title = NULL,
         subtitle = NULL
@@ -122,7 +115,7 @@ output[["plot_average_QALYs"]] <- shiny::renderPlot(
 
 # Estimate Absolute QALYs ------------------------------------------------------
 
-absolute_QALYs <- shiny::reactiveValues()
+total_deaths <- shiny::reactiveValues()
 
 imd_population <- shiny::reactive({
 
@@ -150,9 +143,8 @@ imd_population <- shiny::reactive({
 })
 
 shiny::observe({
-  absolute_QALYs[["national"]] <- UnmetNeeds::calculate_absolute_QALYs(
-    target_maximum_health_ = target_maximum_QALE(),
-    baseline_health_ = inputs_rv[["baseline_health"]],
+  total_deaths[["national"]] <- UnmetNeeds::calculate_total_deaths(
+    mortality_rates_ = inputs_rv[["mortality_rates"]],
     mortality_elasticity_ = inputs_rv[["mortality_elasticity"]],
     option_ = maximum_QALE_option(),
     imd_population_ = imd_population(),
@@ -160,13 +152,13 @@ shiny::observe({
   )
 })
 
-absolute_QALYs_map <- shiny::reactive({
-  shiny::req(absolute_QALYs[["national"]])
+total_deaths_map <- shiny::reactive({
+  shiny::req(total_deaths[["national"]])
 
   # Create_map() function expects the main outcome data to be under column Value
-  value_df <- absolute_QALYs[["national"]]$data[[1]]
+  value_df <- total_deaths[["national"]]$data
   names(value_df)[
-    names(value_df) == "Average change (100,000 population)"] <- "Value"
+    names(value_df) == "Average lives saved (100,000 population)"] <- "Value"
 
   # Ensure SP data is the same as the value_df; i.e. subset as needed
   sp_df <- inputs_rv[["spdf_2019"]]
@@ -193,7 +185,7 @@ absolute_QALYs_map <- shiny::reactive({
     sf::st_bbox() |>
     as.character()
 
-  slotNames(sp_df)
+  slotNames(sp_df) # For some reason an error occurs without this line
 
   # Remove NHS CCG from names
   methods::slot(sp_df, "data")[[common_col]] <- gsub(
@@ -203,7 +195,7 @@ absolute_QALYs_map <- shiny::reactive({
     ignore.case = TRUE
   )
 
-  slotNames(sp_df)
+  slotNames(sp_df) # For some reason an error occurs without this line
 
   value_df[[common_col]] <- gsub(
     x =  value_df[[common_col]],
@@ -218,10 +210,7 @@ absolute_QALYs_map <- shiny::reactive({
   UnmetNeeds::create_map_plot(
     sp_df_ = sp_df,
     value_df_ = value_df,
-    var_nm_ = paste(
-      inputs_rv[["outcome"]],
-      "change"
-    ),
+    var_nm_ = paste("Lives saved"),
     value_year_ = NA,
     value_digits = 0
   ) |>
@@ -230,10 +219,10 @@ absolute_QALYs_map <- shiny::reactive({
     )
 })
 
-absolute_QALYs_df_data <- shiny::reactive({
-  shiny::req(absolute_QALYs[["national"]])
+total_deaths_df_data <- shiny::reactive({
+  shiny::req(total_deaths[["national"]])
 
-  df_colnames <- colnames(absolute_QALYs[["national"]][["data"]][[1]])
+  df_colnames <- colnames(total_deaths[["national"]][["data"]])
 
   tot_pop_names <-  df_colnames |>
     grep(
@@ -275,7 +264,7 @@ absolute_QALYs_df_data <- shiny::reactive({
       value = TRUE
     )
 
-  tmp_table <- absolute_QALYs[["national"]][["data"]][[1]] |>
+  tmp_table <- total_deaths[["national"]][["data"]] |>
     subset(
       select = c(nhs_org_names, tot_pop_names, avg_outcome_name,
                  total_outcome_name, quantile_names)
@@ -294,7 +283,7 @@ absolute_QALYs_df_data <- shiny::reactive({
     inputs_rv[["entity"]],
     "Total population",
     avg_outcome_name,
-    "Total QALY change",
+    "Total lives saved",
     quantile_names
   )
 
@@ -304,9 +293,9 @@ absolute_QALYs_df_data <- shiny::reactive({
 
 # Render Absolute QALYs outputs ------------------------------------------------
 
-output[["title_map_absolute_QALYs"]] <- shiny::renderUI(
+output[["title_map_total_deaths"]] <- shiny::renderUI(
   expr = {
-    shiny::req(absolute_QALYs[["national"]])
+    shiny::req(total_deaths[["national"]])
 
     shiny::tagList(
       paste0(
@@ -316,7 +305,7 @@ output[["title_map_absolute_QALYs"]] <- shiny::renderUI(
       shiny::tags$div(
         title = "Download Map",
         shiny::downloadButton(
-          outputId = "download_map",
+          outputId = "download_deaths_map",
           label = "",
           icon = shiny::icon(
             name = "file-image"
@@ -329,39 +318,39 @@ output[["title_map_absolute_QALYs"]] <- shiny::renderUI(
   }
 )
 
-output[["subtitle_map_absolute_QALYs"]] <- shiny::renderText(
+output[["subtitle_map_total_deaths"]] <- shiny::renderText(
   expr = {
-    shiny::req(absolute_QALYs[["national"]])
+    shiny::req(total_deaths[["national"]])
 
     paste0(
-      "QALYs per 100,000 Population in ",
+      "Lives saved per 100,000 Population in ",
       inputs_rv[["entity"]]
     )
   }
 )
 
-output[["map_absolute_QALYs"]] <- leaflet::renderLeaflet(
+output[["map_total_deaths"]] <- leaflet::renderLeaflet(
   expr = {
-    shiny::req(absolute_QALYs_map())
+    shiny::req(total_deaths_map())
 
-    waiter_qalys_map$show()
+    waiter_deaths_map$show()
 
-    absolute_QALYs_map()
+    total_deaths_map()
   }
 )
 
-output[["title_table_absolute_QALYs"]] <- shiny::renderUI(
+output[["title_table_total_deaths"]] <- shiny::renderUI(
   expr = {
-    shiny::req(absolute_QALYs[["national"]])
+    shiny::req(total_deaths[["national"]])
 
     shiny::tagList(
       paste0(
-        absolute_QALYs[["national"]][["title"]]
+        total_deaths[["national"]][["title"]]
       ),
       shiny::tags$div(
         title = "Download Table",
         shiny::downloadButton(
-          outputId = "download_table",
+          outputId = "download_deaths_table",
           label = "",
           icon = shiny::icon(
             name = "file-csv"
@@ -374,13 +363,13 @@ output[["title_table_absolute_QALYs"]] <- shiny::renderUI(
   }
 )
 
-output[["table_absolute_QALYs"]] <- DT::renderDataTable(
+output[["table_total_deaths"]] <- DT::renderDataTable(
   expr = {
-    shiny::req(absolute_QALYs_df_data())
+    shiny::req(total_deaths_df_data())
 
-    waiter_qalys_table$show()
+    waiter_deaths_table$show()
 
-    tmp_df <- absolute_QALYs_df_data()
+    tmp_df <- total_deaths_df_data()
 
     tmp_df[[inputs_rv[["entity"]]]] <- gsub(
       x =  tmp_df[[inputs_rv[["entity"]]]],
@@ -404,11 +393,11 @@ output[["table_absolute_QALYs"]] <- DT::renderDataTable(
 # Set Download Handlers --------------------------------------------------------
 
 ## Plot
-output[["download_plot"]] <- shiny::downloadHandler(
+output[["download_deaths_plot"]] <- shiny::downloadHandler(
   filename = function() {
     paste0(
-      "QALYs: ",
-      average_QALYs[["data"]][["title"]],
+      "Lives Saved: ",
+      average_lives_saved[["data"]][["title"]],
       ".png"
     )
   },
@@ -419,14 +408,14 @@ output[["download_plot"]] <- shiny::downloadHandler(
       dpi = 300,
       width = 7,
       height = 4,
-      plot = average_QALYs[["plot"]]$data
+      plot = average_lives_saved[["plot"]]$data
     )
   }
 )
 
 ## Map
 ### Prepare title for downloadable map
-tag_downloadable_map_title <- shiny::tags$style(
+tag_downloadable_deaths_map_title <- shiny::tags$style(
   shiny::HTML("
   .leaflet-control.map-title {
     transform: translate(-50%,20%);
@@ -439,7 +428,7 @@ tag_downloadable_map_title <- shiny::tags$style(
 ")
 )
 
-tag_downloadable_map_title_span <- shiny::tags$style(
+tag_downloadable_deaths_map_title_span <- shiny::tags$style(
   shiny::HTML("
   .leaflet-control.map-title-span {
     transform: translate(-50%,20%);
@@ -454,64 +443,64 @@ tag_downloadable_map_title_span <- shiny::tags$style(
 ")
 )
 
-downloadable_map_title_text <- shiny::reactive({
+downloadable_deaths_map_title_text <- shiny::reactive({
   paste0(
     "Average Health Impact by ",
     inputs_rv[["entity"]]
   )
 })
-downloadable_map_subtitle_text <- shiny::reactive({
+downloadable_deaths_map_subtitle_text <- shiny::reactive({
   paste0(
-    "QALYs per 100,000 Population in ",
+    "Lives saved per 100,000 Population in ",
     inputs_rv[["entity"]]
   )
 })
 
-downloadable_map_title <- shiny::reactive({
+downloadable_deaths_map_title <- shiny::reactive({
   shiny::tags$div(
-    tag_downloadable_map_title,
+    tag_downloadable_deaths_map_title,
     shiny::HTML(
       paste0(
-        downloadable_map_title_text()
+        downloadable_deaths_map_title_text()
       )
     )
   )
 })
 
-downloadable_map_subtitle <- shiny::reactive({
+downloadable_deaths_map_subtitle <- shiny::reactive({
   shiny::tags$div(
-    tag_downloadable_map_title_span,
+    tag_downloadable_deaths_map_title_span,
     shiny::HTML(
       paste0(
-        downloadable_map_subtitle_text()
+        downloadable_deaths_map_subtitle_text()
       )
     )
   )
 })
 
 ### Set map download handler
-output[["download_map"]] <- shiny::downloadHandler(
+output[["download_deaths_map"]] <- shiny::downloadHandler(
   filename = function() {
     paste0(
-      "QALYs: ",
+      "Lives Saved: ",
       "Average Health Impact by ",
       inputs_rv[["entity"]],
       ".png"
     )
   },
   content = function(file) {
-    shinyjs::disable("download_map")
-    on.exit(shinyjs::enable("download_map"))
+    shinyjs::disable("download_deaths_map")
+    on.exit(shinyjs::enable("download_deaths_map"))
     mapview::mapshot(
       file = file,
-      x = absolute_QALYs_map() |>
+      x = total_deaths_map() |>
         leaflet::addControl(
-          html = downloadable_map_title(),
+          html = downloadable_deaths_map_title(),
           position = "topleft",
           className = "map-title"
         ) |>
         leaflet::addControl(
-          html = downloadable_map_subtitle(),
+          html = downloadable_deaths_map_subtitle(),
           position = "topleft",
           className = "map-title-span"
         )
@@ -520,11 +509,11 @@ output[["download_map"]] <- shiny::downloadHandler(
 )
 
 ## Table
-output[["download_table"]] <- shiny::downloadHandler(
+output[["download_deaths_table"]] <- shiny::downloadHandler(
   filename = function() {
     paste0(
-      "QALYs: ",
-      absolute_QALYs[["national"]][["title"]],
+      "Lives Saved: ",
+      total_deaths[["national"]][["title"]],
       ".csv"
     )
   },
@@ -532,7 +521,7 @@ output[["download_table"]] <- shiny::downloadHandler(
     write.csv(
       file = file,
       x = {
-        tmp_df <- absolute_QALYs_df_data()
+        tmp_df <- total_deaths_df_data()
 
         tmp_df[[inputs_rv[["entity"]]]] <- gsub(
           x =  tmp_df[[inputs_rv[["entity"]]]],

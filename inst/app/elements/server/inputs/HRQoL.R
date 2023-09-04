@@ -43,11 +43,14 @@ inputs_rv[["HRQoL_inputs_1"]] <- data.frame(
   names(UnmetNeeds::input_data_mQALE$`Baseline health`),
   UnmetNeeds::input_data_mQALE$`Baseline health` |>
     unname(),
+  UnmetNeeds::input_data_mQALE$`Mortality rate` |>
+    unname(),
   UnmetNeeds::input_data_mQALE$`Mortality elasticity` |>
     unname()
 ) |>
   `colnames<-`(
-    c("Deprivation Quantile", "Baseline Health", "Mortality Elasticity")
+    c("Deprivation Quantile", "Baseline Health", "Mortality Rate",
+      "Mortality Elasticity")
   )
 
 shiny::observe({
@@ -62,7 +65,7 @@ shiny::observe({
   inputs_rv[["HRQoL_inputs_1"]] <- inputs_rv[["HRQoL_inputs_1"]][
     ,
     c("Deprivation Quantile", "Baseline Health", "Baseline Health Burden",
-      "Mortality Elasticity")
+      "Mortality Rate", "Mortality Elasticity")
   ]
 
 })
@@ -128,20 +131,17 @@ observeEvent(
       unlist() |>
       `names<-`(names(UnmetNeeds::input_data_mQALE$`Baseline health`))
 
-    inputs_rv[["baseline_health"]]
-  }
-)
+    inputs_rv[["mortality_rates"]] <- inputs_rv[["HRQoL_inputs_1"]] |>
+      subset(select = `Mortality Rate`) |>
+      as.vector() |>
+      unlist() |>
+      `names<-`(names(UnmetNeeds::input_data_mQALE$`Mortality rate`))
 
-observeEvent(
-  eventExpr = inputs_rv[["HRQoL_inputs_1"]],
-  handlerExpr = {
     inputs_rv[["mortality_elasticity"]] <- inputs_rv[["HRQoL_inputs_1"]] |>
       subset(select = `Mortality Elasticity`) |>
       as.vector() |>
       unlist() |>
       `names<-`(names(UnmetNeeds::input_data_mQALE$`Mortality elasticity`))
-
-    inputs_rv[["mortality_elasticity"]]
   }
 )
 
@@ -164,7 +164,5 @@ observeEvent(
       as.vector() |>
       unlist() |>
       `names<-`(names(UnmetNeeds::input_data_mQALE$`Target maximum QALE`))
-
-    inputs_rv[["target_maximum_QALE"]]
   }
 )

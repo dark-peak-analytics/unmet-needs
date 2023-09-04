@@ -29,7 +29,10 @@ shiny::modalDialog(
         ),
         shiny::tags$li(
           "the baseline health burden, the shortfall from the assumed maximum",
-          "Quality-adjusted Life Expectancy (QALE), and"
+          "Quality-adjusted Life Expectancy (QALE),"
+        ),
+        shiny::tags$li(
+          "the mortality rate, per 100,000, and"
         ),
         shiny::tags$li(
           "the mortality elasticity by deprivation quintile.",

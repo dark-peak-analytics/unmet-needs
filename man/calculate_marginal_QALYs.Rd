@@ -5,7 +5,7 @@
 \title{Calculate the marginal QALYs}
 \usage{
 calculate_marginal_QALYs(
-  target_maximum_QALE_ = input_data_mQALE$`Target maximum QALE`,
+  target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
   baseline_health_ = input_data_mQALE$`Baseline health`,
   mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
   option_ = "estimated_mortality_elasticity",
@@ -13,7 +13,7 @@ calculate_marginal_QALYs(
 )
 }
 \arguments{
-\item{target_maximum_QALE_}{Numeric vector specifying the target maximum QALE
+\item{target_maximum_health_}{Numeric vector specifying the target maximum QALE
 for low (GBD study), mid and high (maximum lifespan).}
 
 \item{baseline_health_}{Numeric vector specifying the baseline health per

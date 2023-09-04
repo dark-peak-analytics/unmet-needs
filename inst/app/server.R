@@ -221,6 +221,7 @@ server <- function(input, output, session) {
   inputs_rv[["spdf_2019"]] <- UnmetNeeds::spdf_2019
   inputs_rv[["IMD_population"]] <- IMD_data
   inputs_rv[["IMD_population_year"]] <- "2019"
+  inputs_rv[["pcnt_change"]] <- 1
 
   # Prepare server elements ----------------------------------------------------
 
@@ -252,7 +253,7 @@ server <- function(input, output, session) {
     }
   )
 
-  Sys.sleep(time = 3)
+  Sys.sleep(time = 1.5)
   # Show main ui page now that the server is ready -----------------------------
   shinyjs::show(
     id = "main-ui"
