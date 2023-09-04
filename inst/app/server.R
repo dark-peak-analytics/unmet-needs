@@ -253,7 +253,7 @@ server <- function(input, output, session) {
     }
   )
 
-  Sys.sleep(time = 3)
+  Sys.sleep(time = 1.5)
   # Show main ui page now that the server is ready -----------------------------
   shinyjs::show(
     id = "main-ui"
