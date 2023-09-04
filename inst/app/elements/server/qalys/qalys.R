@@ -50,6 +50,7 @@ shiny::observe({
 
   average_QALYs[["data"]] <- UnmetNeeds::calculate_average_QALYs(
     absolute_QALYs_ = UnmetNeeds::calculate_absolute_QALYs(
+      target_maximum_health_ = target_maximum_QALE(),
       baseline_health_ = inputs_rv[["baseline_health"]],
       mortality_elasticity_ = inputs_rv[["mortality_elasticity"]],
       option_ = maximum_QALE_option(),
@@ -151,6 +152,7 @@ imd_population <- shiny::reactive({
 
 shiny::observe({
   absolute_QALYs[["national"]] <- UnmetNeeds::calculate_absolute_QALYs(
+    target_maximum_health_ = target_maximum_QALE(),
     baseline_health_ = inputs_rv[["baseline_health"]],
     mortality_elasticity_ = inputs_rv[["mortality_elasticity"]],
     option_ = maximum_QALE_option(),
