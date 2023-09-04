@@ -17,7 +17,10 @@
 #' @return A list containing ggplot2 objects.
 #'
 #' @export
-#'
+#' @examples
+#' \dontrun{
+#' average_QALYs_change_plot <- plot_average_QALYs()
+#' }
 plot_average_QALYs <- function(
     average_QALYs_ = UnmetNeeds::calculate_average_QALYs()) {
 

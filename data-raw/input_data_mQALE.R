@@ -3,9 +3,9 @@
 input_data_mQALE <-
   list(
     "Target maximum QALE" = c(
-      "Low (GBD study)" = 86.59,
+      "High (max lifespan)" = 120,
       "Mid" =  100,
-      "High (max lifespan)" = 120
+      "Low (GBD study)" = 86.59
     ),
     "Baseline health" = c( # from paper 1 - EQ5D-5L results
       "Q1 - Most Deprived" = 66.37,

@@ -199,6 +199,7 @@ shiny::observeEvent(
 shiny::observeEvent(
   eventExpr = input$pcnt_change,
   handlerExpr = {
+    inputs_rv[["pcnt_change"]] <- input$pcnt_change
     inputs_rv[["expenditure_df"]][["Expenditure change (%)"]] <-
       input$pcnt_change
   }

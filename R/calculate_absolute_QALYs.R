@@ -101,7 +101,7 @@ calculate_absolute_QALYs <- function(
     }
   )
 
-  ## Calculate QALY gain per person per IMD quintile:
+  ## Calculate QALY gain per person per deprivation (IMD) quintile:
   QALY_gain <- lapply(
     X = baseline_health_burden,
     FUN = function(QALE_burden_) {

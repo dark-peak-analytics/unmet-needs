@@ -20,3 +20,8 @@ Plot the average change in Quality-Adjusted Life Years (QALYs).
 This function takes ... inputs and then ... to plot the average
 change in Quality-Adjusted Life Years (QALYs).
 }
+\examples{
+\dontrun{
+average_QALYs_change_plot <- plot_average_QALYs()
+}
+}

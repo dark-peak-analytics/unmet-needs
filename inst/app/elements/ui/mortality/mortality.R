@@ -1,58 +1,76 @@
 ################################################################################
 #
-# Script Name:        regional.R
+# Script Name:        mortality.R
 # Module Name:        ui
 #
 ################################################################################
 
-# Create mortality data page ---------------------------------------------------
+# Create national impact results page ------------------------------------------
 
 shinydashboard::tabItem(
   tabName = "mortality",
-  # shiny::h1("Impact on Mortality"),
-  # shiny::p(
-  #   "This shiny app is a skeleton web application design to reflect the current
-  #   design blueprint. The hope is the porject lead would then share their
-  #   thoughts and recomendation on how to enhance/improce or change the app. The
-  #   purpose of this section is to show how users would view the first content
-  #   page (the 'Home' tab). Now lets see how links appear in the first ",
-  #   # shiny::tags$a(
-  #   #   href = ,
-  #   #   "demo link1"
-  #   # ),
-  #   "and the second demo ",
-  #   # shiny::tags$a(
-  #   #   "demo iink2,"
-  #   # ),
-  #   "to showcase how a rich text can be added to this tab."
-  # ),
-  # shiny::p(
-  #   "This represents the begining of a new paragraph."
-  # ),
-  # shiny::h2("Second-level header"),
-  # shiny::p(
-  #   "This paragraph comes right after a second-level header."
-  # ),
-  # shiny::p(
-  #   "Second paragraph."
-  # ),
-  # shiny::p(
-  #   "and the story continues in this paragraph."
-  # ),
-  # shiny::h2("Another second-level header"),
-  # shiny::p(
-  #   "Here we start with the first paragraph."
-  # ),
-  # shiny::p(
-  #   "The second paragraph then follows."
-  # ),
-  # shiny::h1("One more title"),
-  # shiny::p(
-  #   "Why is this important? More is not always better!"
-  # ),
-  # shiny::h1("Another title"),
-  # shiny::p(
-  #   "More about the the third title."
-  # ),
-  # DT::dataTableOutput("df_home_scenarios", height = 270, width = "100%")
+  shiny::fluidRow(
+    shinydashboard::box(
+      title = shiny::tagList(
+        shiny::uiOutput(
+          outputId = "title_average_deaths"
+        )
+      ),
+      status = "info",
+      collapsible = FALSE,
+      collapsed = FALSE,
+      width = 6,
+      shiny::p(
+        style = "float: left; padding-top: 0px; padding-left: 5px; margin-top: 0",
+        shiny::textOutput(
+          outputId = "subtitle_average_deaths"
+        )
+      ),
+      shiny::plotOutput(
+        outputId = "plot_average_deaths",
+        height = 455,
+        width = "100%"
+      )
+    ),
+    shinydashboard::box(
+      title = shiny::tagList(
+        shiny::uiOutput(
+          outputId = "title_map_total_deaths"
+        ),
+      ),
+      status = "info",
+      collapsible = FALSE,
+      collapsed = FALSE,
+      width = 6,
+      shiny::p(
+        style = "float: left; padding-top: 0px; padding-left: 5px; margin-top: 0",
+        shiny::textOutput(
+          outputId = "subtitle_map_total_deaths"
+        )
+      ),
+      leaflet::leafletOutput(
+        outputId = "map_total_deaths",
+        height = 455,
+        width = "100%"
+      )
+    )
+  ),
+  shiny::fluidRow(
+    shinydashboard::box(
+      title = shiny::tagList(
+        shiny::uiOutput(
+          outputId = "title_table_total_deaths"
+        )
+      ),
+      status = "info",
+      collapsible = FALSE,
+      collapsed = FALSE,
+      width = 12,
+      DT::dataTableOutput(
+        outputId = "table_total_deaths",
+        height = 455,
+        width = "100%"
+      )
+    )
+  )
 )
