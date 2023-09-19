@@ -11,6 +11,18 @@ shinydashboard::tabItem(
   tabName = "qalys",
   shiny::fluidRow(
     shinydashboard::box(
+      title = "Summary",
+      status = "info",
+      collapsible = FALSE,
+      collapsed = FALSE,
+      width = 12,
+      shiny::tagList(
+        shiny::uiOutput(
+          outputId = "summary_absolute_QALYs"
+        )
+      )
+    ),
+    shinydashboard::box(
       title = shiny::tagList(
         shiny::uiOutput(
           outputId = "title_average_QALYs"

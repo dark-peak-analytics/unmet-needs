@@ -34,7 +34,7 @@ waiter_deaths_table <- waiter::Waiter$new(
   hide_on_render  = TRUE
 )
 
-# Estimate Total Deaths --------------------------------------------------------
+# Estimate Average Lives Saved ---------------------------------------------------
 
 average_lives_saved <- shiny::reactiveValues()
 
@@ -60,7 +60,7 @@ shiny::observe({
   )
 })
 
-# Render Average Deaths outputs ------------------------------------------------
+# Render Average Lives Saved outputs -------------------------------------------
 
 output[["title_average_deaths"]] <- shiny::renderUI(
   expr = {
@@ -113,7 +113,7 @@ output[["plot_average_deaths"]] <- shiny::renderPlot(
   bg = "transparent"
 )
 
-# Estimate Absolute QALYs ------------------------------------------------------
+# Estimate Total Lives Saved ---------------------------------------------------
 
 total_deaths <- shiny::reactiveValues()
 
@@ -270,6 +270,9 @@ total_deaths_df_data <- shiny::reactive({
                  total_outcome_name, quantile_names)
     )
 
+  # Save summary values
+  outputs_rv[["total_lives_saved"]] <- sum(tmp_table[[total_outcome_name]])
+
   # Create a vector of numeric column names
   numeric_cols <- names(tmp_table)[sapply(tmp_table, is.numeric)]
 
@@ -291,7 +294,21 @@ total_deaths_df_data <- shiny::reactive({
 })
 
 
-# Render Absolute QALYs outputs ------------------------------------------------
+# Render Total Lives Saved outputs ---------------------------------------------
+
+output[["summary_total_lives_saved"]] <- shiny::renderUI(
+  expr = {
+    shiny::req(total_deaths_df_data)
+
+    shiny::tagList(
+      paste0(
+        "Total lives saved: ",
+        outputs_rv[["total_lives_saved"]],
+        "."
+      )
+    )
+  }
+)
 
 output[["title_map_total_deaths"]] <- shiny::renderUI(
   expr = {

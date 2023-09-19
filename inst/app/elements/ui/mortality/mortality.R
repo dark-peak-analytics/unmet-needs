@@ -11,6 +11,18 @@ shinydashboard::tabItem(
   tabName = "mortality",
   shiny::fluidRow(
     shinydashboard::box(
+      title = "Summary",
+      status = "info",
+      collapsible = FALSE,
+      collapsed = FALSE,
+      width = 12,
+      shiny::tagList(
+        shiny::uiOutput(
+          outputId = "summary_total_lives_saved"
+        )
+      )
+    ),
+    shinydashboard::box(
       title = shiny::tagList(
         shiny::uiOutput(
           outputId = "title_average_deaths"

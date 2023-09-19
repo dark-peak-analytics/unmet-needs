@@ -281,6 +281,9 @@ absolute_QALYs_df_data <- shiny::reactive({
                  total_outcome_name, quantile_names)
     )
 
+  # Save summary values
+  outputs_rv[["total_QALYs_gained"]] <- sum(tmp_table[[total_outcome_name]])
+
   # Create a vector of numeric column names
   numeric_cols <- names(tmp_table)[sapply(tmp_table, is.numeric)]
 
@@ -303,6 +306,20 @@ absolute_QALYs_df_data <- shiny::reactive({
 
 
 # Render Absolute QALYs outputs ------------------------------------------------
+
+output[["summary_absolute_QALYs"]] <- shiny::renderUI(
+  expr = {
+    shiny::req(absolute_QALYs_df_data)
+
+    shiny::tagList(
+      paste0(
+        "Total Quality Adjusted Life Years Gained (QALYs) gained: ",
+        round(outputs_rv[["total_QALYs_gained"]]),
+        "."
+      )
+    )
+  }
+)
 
 output[["title_map_absolute_QALYs"]] <- shiny::renderUI(
   expr = {

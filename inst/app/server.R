@@ -213,6 +213,7 @@ server <- function(input, output, session) {
 
   inputs_rv <- shiny::reactiveValues()
   controls_rv <- shiny::reactiveValues()
+  outputs_rv <- shiny::reactiveValues()
 
   # Assign reactive values -------------------------------------------------------
 
