@@ -223,6 +223,8 @@ server <- function(input, output, session) {
   inputs_rv[["IMD_population"]] <- IMD_data
   inputs_rv[["IMD_population_year"]] <- "2019"
   inputs_rv[["pcnt_change"]] <- 1
+  inputs_rv[["equal_mortality_elasticity"]] <- UnmetNeeds::input_data_mQALE$
+    `Equal mortality elasticity`
 
   # Prepare server elements ----------------------------------------------------
 

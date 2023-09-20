@@ -5,8 +5,9 @@
 \title{Calculate the Total Number of Deaths prevented by healthcare provider.}
 \usage{
 calculate_total_deaths(
-  mortality_rates_ = input_data_mQALE$`Mortality rate`,
+  mortality_rates_ = input_data_mQALE$`Mortality rate`[1:5],
   mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+  equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
   option_ = "estimated_mortality_elasticity",
   imd_population_ = CCG_IMD_population_2019,
   provider_ = "CCG"
@@ -18,6 +19,9 @@ calculate_total_deaths(
 
 \item{mortality_elasticity_}{Numeric vector specifying the mortality
 elasticity per deprivation quintile.}
+
+\item{equal_mortality_elasticity_}{Numeric scalar defining the value to be
+used when the argument \code{option_} is set to \code{equal_mortality_elasticity}.}
 
 \item{option_}{Character scalar specifying whether to estimate the marginal
 QALE based on actual or equal marginal elasticity,
@@ -42,15 +46,17 @@ number of deaths.
 \examples{
 \dontrun{
 total_lives_saved <- calculate_total_deaths(
-  mortality_rates_ = input_data_mQALE$`Mortality rate`,
+  mortality_rates_ = input_data_mQALE$`Mortality rate`[1:5],
   mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+  equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
   option_ = "estimated_mortality_elasticity",
   imd_population_ = CCG_IMD_population_2019,
   provider_ = "CCG"
 )
 total_lives_saved_equ_elas <- calculate_total_deaths(
-  mortality_rates_ = input_data_mQALE$`Mortality rate`,
+  mortality_rates_ = input_data_mQALE$`Mortality rate`[1:5],
   mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+  equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
   option_ = "equal_mortality_elasticity",
   imd_population_ = CCG_IMD_population_2019,
   provider_ = "CCG"

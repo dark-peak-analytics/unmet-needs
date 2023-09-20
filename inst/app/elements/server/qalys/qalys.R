@@ -53,6 +53,7 @@ shiny::observe({
       target_maximum_health_ = target_maximum_QALE(),
       baseline_health_ = inputs_rv[["baseline_health"]],
       mortality_elasticity_ = inputs_rv[["mortality_elasticity"]],
+      equal_mortality_elasticity_ = inputs_rv[["equal_mortality_elasticity"]],
       option_ = maximum_QALE_option(),
       imd_population_ = imd_pop_data,
       provider_ = inputs_rv[["entity"]]
@@ -154,6 +155,7 @@ shiny::observe({
     target_maximum_health_ = target_maximum_QALE(),
     baseline_health_ = inputs_rv[["baseline_health"]],
     mortality_elasticity_ = inputs_rv[["mortality_elasticity"]],
+    equal_mortality_elasticity_ = inputs_rv[["equal_mortality_elasticity"]],
     option_ = maximum_QALE_option(),
     imd_population_ = imd_population(),
     provider_ = inputs_rv[["entity"]]

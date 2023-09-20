@@ -18,6 +18,8 @@
 #' quintile. Default value from PAPER 1 representing EQ5D-5L results.
 #' @param mortality_elasticity_ Numeric vector specifying the mortality
 #' elasticity per deprivation quintile.
+#' @param equal_mortality_elasticity_ Numeric scalar defining the value to be
+#' used when the argument `option_` is set to `equal_mortality_elasticity`.
 #' @param option_ Character scalar specifying whether to estimate the marginal
 #' QALE based on actual or equal marginal elasticity,
 #' `estimated_mortality_elasticity` or `equal_mortality_elasticity`,
@@ -34,16 +36,18 @@
 #' \dontrun{
 #' absolute_QALYs <- calculate_absolute_QALYs(
 #'   target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
-#'   baseline_health_ = input_data_mQALE$`Baseline health`,
+#'   baseline_health_ = input_data_mQALE$`Baseline health`[1:5],
 #'   mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+#'   equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
 #'   option_ = "estimated_mortality_elasticity",
 #'   imd_population_ = CCG_IMD_population_2019,
 #'   provider_ = "CCG"
 #' )
 #' absolute_QALYs_equ_elas <- calculate_absolute_QALYs(
 #'   target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
-#'   baseline_health_ = input_data_mQALE$`Baseline health`,
+#'   baseline_health_ = input_data_mQALE$`Baseline health`[1:5],
 #'   mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+#'   equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
 #'   option_ = "equal_mortality_elasticity",
 #'   imd_population_ = CCG_IMD_population_2019,
 #'   provider_ = "CCG"
@@ -51,8 +55,9 @@
 #' }
 calculate_absolute_QALYs <- function(
     target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
-    baseline_health_ = input_data_mQALE$`Baseline health`,
+    baseline_health_ = input_data_mQALE$`Baseline health`[1:5],
     mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+    equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
     option_ = "estimated_mortality_elasticity",
     imd_population_ = CCG_IMD_population_2019,
     provider_ = "CCG") {
@@ -67,12 +72,22 @@ calculate_absolute_QALYs <- function(
     assertthat::are_equal(
       length(baseline_health_), 5
     ),
+    all(mortality_elasticity_ > 0, mortality_elasticity_ < 1),
     msg = paste(
       "The vectors passed to baseline_health_ and/or mortality_elasticity_",
       "arguments are not numeric, of equal length or of length 5. Please ensure",
       "that each object is a named numric vector of length five representing",
       "the values corresponding to each deprivation quintile, starting with Q1",
       "(the most deprived)."
+    )
+  )
+  assertthat::assert_that(
+    is.numeric(equal_mortality_elasticity_),
+    length(equal_mortality_elasticity_) == 1,
+    all(equal_mortality_elasticity_ > 0, equal_mortality_elasticity_ < 1),
+    msg = paste(
+      "equal_mortality_elasticity_ is not a numeric or a numeric scalar or",
+      "between 0 and 1."
     )
   )
 
@@ -83,7 +98,7 @@ calculate_absolute_QALYs <- function(
     estimated_mortality_elasticity = mortality_elasticity_,
     equal_mortality_elasticity = {
       rep(
-        x = mean(mortality_elasticity_),
+        x = equal_mortality_elasticity_,
         length.out = length(mortality_elasticity_)
       ) |>
         `names<-`(quintile_names)
