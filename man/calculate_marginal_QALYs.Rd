@@ -5,9 +5,9 @@
 \title{Calculate the marginal QALYs}
 \usage{
 calculate_marginal_QALYs(
-  target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
-  baseline_health_ = input_data_mQALE$`Baseline health`,
-  mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+  target_maximum_health_,
+  baseline_health_,
+  mortality_elasticity_,
   option_ = "estimated_mortality_elasticity",
   expenditure_change_ = 1
 )

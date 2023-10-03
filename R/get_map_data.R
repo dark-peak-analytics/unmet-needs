@@ -1,13 +1,3 @@
-################################################################################
-#
-# Script Name:        get_map_data.R
-# Script Description: Defines the function get_map_data(). This function connects
-#                     to the Open Geography Portal provided by the ONS and
-#                     performs an API query to get a boundary data shape file
-#                     for a user specified layer.
-#
-################################################################################
-
 #' @title Get Map API Query for Open Geography Portal
 #'
 #' @description Performs an API query for data from the Open Geography Portal
@@ -69,28 +59,28 @@ get_map_data <- function(
   )
   ## Override map_year_ to earliest/latest value if needed:
   query_year <- if(!is.null(map_year_)) {
-    if(map_year_ < min(ons_ccg_ics_maps_data$map_year)) {
+    if(map_year_ < min(UnmetNeeds::ons_ccg_ics_maps_data$map_year)) {
       rlang::inform(
         message = paste(
           "Data from the year",
           map_year_,
           "is not currently available via this function. Querying data from the",
           "earliest possible year:",
-          min(ons_ccg_ics_maps_data$map_year)
+          min(UnmetNeeds::ons_ccg_ics_maps_data$map_year)
         )
       )
-      min(ons_ccg_ics_maps_data$map_year)
-    } else if (map_year_ > max(ons_ccg_ics_maps_data$map_year)) {
+      min(UnmetNeeds::ons_ccg_ics_maps_data$map_year)
+    } else if (map_year_ > max(UnmetNeeds::ons_ccg_ics_maps_data$map_year)) {
       rlang::inform(
         message = paste(
           "Data from the year",
           map_year_,
           "is not currently available via this function. Querying data from the",
           "latest possible year:",
-          max(ons_ccg_ics_maps_data$map_year)
+          max(UnmetNeeds::ons_ccg_ics_maps_data$map_year)
         )
       )
-      max(ons_ccg_ics_maps_data$map_year)
+      max(UnmetNeeds::ons_ccg_ics_maps_data$map_year)
     }  else {
       map_year_
     }
@@ -99,17 +89,18 @@ get_map_data <- function(
   }
 
   # Grab the correct ONS object name:
+  map_year <- map_object_name <- healthcare_entity <- NULL
   map_object <- if(!is.null(query_year)) {
-    ons_ccg_ics_maps_data |>
+    UnmetNeeds::ons_ccg_ics_maps_data |>
       subset(
         subset = map_year == query_year,
         select = map_object_name
       ) |>
       _[[1]][1]
   } else {
-    ons_ccg_ics_maps_data[
+    UnmetNeeds::ons_ccg_ics_maps_data[
       order(
-        ons_ccg_ics_maps_data$map_year,
+        UnmetNeeds::ons_ccg_ics_maps_data$map_year,
         decreasing = TRUE
       ),
     ] |>

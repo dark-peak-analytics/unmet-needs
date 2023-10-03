@@ -2,14 +2,14 @@
 % Please edit documentation in R/calculate_total_deaths.R
 \name{calculate_total_deaths}
 \alias{calculate_total_deaths}
-\title{Calculate the Total Number of Deaths prevented by healthcare provider.}
+\title{Calculate the Total Number of Deaths prevented by healthcare provider}
 \usage{
 calculate_total_deaths(
-  mortality_rates_ = input_data_mQALE$`Mortality rate`[1:5],
-  mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
-  equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
+  mortality_rates_,
+  mortality_elasticity_,
+  equal_mortality_elasticity_,
   option_ = "estimated_mortality_elasticity",
-  imd_population_ = CCG_IMD_population_2019,
+  imd_population_,
   provider_ = "CCG"
 )
 }

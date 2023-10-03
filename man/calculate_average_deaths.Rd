@@ -2,12 +2,9 @@
 % Please edit documentation in R/calculate_average_deaths.R
 \name{calculate_average_deaths}
 \alias{calculate_average_deaths}
-\title{Calculate Average Number of Deaths Prevented by Deprivation Quintile.}
+\title{Calculate Average Number of Deaths Prevented by Deprivation Quintile}
 \usage{
-calculate_average_deaths(
-  total_lives_saved_ = UnmetNeeds::calculate_total_deaths()$data,
-  imd_population_ = CCG_IMD_population_2019
-)
+calculate_average_deaths(total_lives_saved_, imd_population_)
 }
 \arguments{
 \item{total_lives_saved_}{Dataframe or data table representing the outputs of

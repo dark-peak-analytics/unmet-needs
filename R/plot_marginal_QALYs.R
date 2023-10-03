@@ -1,12 +1,3 @@
-################################################################################
-#
-# Script Name:        plot_marginal_QALYs.R
-# Script Description: Defines the function plot_marginal_QALYs(). This
-#                     function estimates the marginal Quality-Adjusted Life
-#                     Expectancy (QALE).
-#
-################################################################################
-
 #' @title Calculate the marginal QALYs
 #' @description Estimates the the marginal Quality-Adjusted Life Expectancy
 #' (QALE) per deprivation quintile.
@@ -20,8 +11,7 @@
 #'
 #' @export
 #'
-plot_marginal_QALYs <- function(
-    marginal_QALYs_) {
+plot_marginal_QALYs <- function(marginal_QALYs_) {
 
   ## Sanity checks:
 
@@ -31,6 +21,7 @@ plot_marginal_QALYs <- function(
   marginal_QALYs_plot_caption <- marginal_QALYs_[["caption"]]
 
   ## Plot:
+  `Marginal QALY` <- `Deprivation Quintile` <- NULL
   marginal_QALYs_plot_list <- lapply(
     X = 1:length(marginal_QALYs_plot_data),
     FUN = function(dataset_) {

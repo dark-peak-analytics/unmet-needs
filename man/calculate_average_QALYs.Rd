@@ -3,12 +3,9 @@
 \name{calculate_average_QALYs}
 \alias{calculate_average_QALYs}
 \title{Calculate Average Quality-Adjusted Life Years (QALYs) by Deprivation
-Quintile.}
+Quintile}
 \usage{
-calculate_average_QALYs(
-  absolute_QALYs_ = UnmetNeeds::calculate_absolute_QALYs()$data[[1]],
-  imd_population_ = CCG_IMD_population_2019
-)
+calculate_average_QALYs(absolute_QALYs_, imd_population_)
 }
 \arguments{
 \item{absolute_QALYs_}{Dataframe or data table representing the outputs of

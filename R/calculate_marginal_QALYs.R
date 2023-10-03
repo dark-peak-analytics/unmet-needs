@@ -1,12 +1,3 @@
-################################################################################
-#
-# Script Name:        calculate_marginal_QALYs.R
-# Script Description: Defines the function calculate_marginal_QALYs(). This
-#                     function estimates the marginal Quality-Adjusted Life
-#                     Years (QALYs) from the Expectancy (QALE).
-#
-################################################################################
-
 #' @title Calculate the marginal QALYs
 #' @description Estimates the per deprivation quintile marginal Quality-Adjusted
 #' Life Years (QALYs) from the Quality-Adjusted Life Expectancy (QALE).
@@ -30,9 +21,9 @@
 #' @export
 #'
 calculate_marginal_QALYs <- function(
-    target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
-    baseline_health_ = input_data_mQALE$`Baseline health`,
-    mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+    target_maximum_health_,
+    baseline_health_,
+    mortality_elasticity_,
     option_ = "estimated_mortality_elasticity",
     expenditure_change_ = 1) {
 

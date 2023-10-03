@@ -1,13 +1,4 @@
-################################################################################
-#
-# Script Name:        plot_average_QALYs.R
-# Script Description: Defines the function plot_average_QALYs(). This
-#                     function plots the average change in Quality-Adjusted Life
-#                     Years (QALYs).
-#
-################################################################################
-
-#' @title Plot the average change in Quality-Adjusted Life Years (QALYs).
+#' @title Plot the average change in Quality-Adjusted Life Years (QALYs)
 #' @details This function takes ... inputs and then ... to plot the average
 #' change in Quality-Adjusted Life Years (QALYs).
 #'
@@ -21,8 +12,7 @@
 #' \dontrun{
 #' average_QALYs_change_plot <- plot_average_QALYs()
 #' }
-plot_average_QALYs <- function(
-    average_QALYs_ = UnmetNeeds::calculate_average_QALYs()) {
+plot_average_QALYs <- function(average_QALYs_) {
 
   ## Sanity checks:
 
@@ -33,6 +23,7 @@ plot_average_QALYs <- function(
   average_QALYs_plot_caption <- average_QALYs_[["caption"]]
 
   ## Plot:
+  `Average change in QALYs` <- `Deprivation Quintile` <- NULL
   average_QALYs_plot <- average_QALYs_plot_data |>
     ggplot2::ggplot(
       data = _,

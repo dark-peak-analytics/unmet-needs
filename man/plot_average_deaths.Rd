@@ -2,11 +2,9 @@
 % Please edit documentation in R/plot_average_deaths.R
 \name{plot_average_deaths}
 \alias{plot_average_deaths}
-\title{Plot the average deaths by deprivation quintile.}
+\title{Plot the average deaths by deprivation quintile}
 \usage{
-plot_average_deaths(
-  average_lives_saved_ = UnmetNeeds::calculate_average_deaths()
-)
+plot_average_deaths(average_lives_saved_)
 }
 \arguments{
 \item{average_lives_saved_}{An object representing the outputs of the function
@@ -16,7 +14,7 @@ plot_average_deaths(
 A list containing ggplot2 objects.
 }
 \description{
-Plot the average deaths by deprivation quintile.
+Plot the average deaths by deprivation quintile
 }
 \details{
 Plot the average deaths.

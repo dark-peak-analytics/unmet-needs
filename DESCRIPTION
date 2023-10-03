@@ -1,5 +1,5 @@
 Package: UnmetNeeds
-Title: Estimating health impacts associated with unmet needs.
+Title: Estimating health impacts associated with unmet needs
 Version: 0.0.0.9000
 Authors@R: 
     person(

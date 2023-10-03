@@ -2,15 +2,15 @@
 % Please edit documentation in R/calculate_absolute_QALYs.R
 \name{calculate_absolute_QALYs}
 \alias{calculate_absolute_QALYs}
-\title{Calculate Absolute Quality-Adjusted Life Years (QALYs).}
+\title{Calculate Absolute Quality-Adjusted Life Years (QALYs)}
 \usage{
 calculate_absolute_QALYs(
-  target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
-  baseline_health_ = input_data_mQALE$`Baseline health`[1:5],
-  mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
-  equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
+  target_maximum_health_,
+  baseline_health_,
+  mortality_elasticity_,
+  equal_mortality_elasticity_,
   option_ = "estimated_mortality_elasticity",
-  imd_population_ = CCG_IMD_population_2019,
+  imd_population_,
   provider_ = "CCG"
 )
 }

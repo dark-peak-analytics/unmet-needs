@@ -1,14 +1,5 @@
-################################################################################
-#
-# Script Name:        calculate_average_QALYs.R
-# Script Description: Defines the function calculate_average_QALYs(). This
-#                     function estimates the average Quality-Adjusted Life
-#                     Years (QALY) gained by deprivation quintile.
-#
-################################################################################
-
 #' @title Calculate Average Quality-Adjusted Life Years (QALYs) by Deprivation
-#' Quintile.
+#' Quintile
 #' @description Estimates the the average Quality-Adjusted Life Year (QALY) per
 #' deprivation quintile.
 #' @details This function takes ... inputs and then ... to estimate the average
@@ -48,8 +39,8 @@
 #' )
 #' }
 calculate_average_QALYs <- function(
-    absolute_QALYs_ = UnmetNeeds::calculate_absolute_QALYs()$data[[1]],
-    imd_population_ = CCG_IMD_population_2019) {
+    absolute_QALYs_,
+    imd_population_) {
 
   ## Auxiliary data:
   quintile_names <- grep(
@@ -59,7 +50,9 @@ calculate_average_QALYs <- function(
     value = TRUE
   )
   total_pop_quintile <- colSums(imd_population_[, quintile_names])
-  total_QALYs_change_quintile <- colSums(absolute_QALYs_[, ..quintile_names])
+  total_QALYs_change_quintile <- colSums(
+    absolute_QALYs_[, quintile_names, with = FALSE]
+  )
 
   ## Estimate average QALYs change per quintile:
   average_QALYs_change_quintile <-

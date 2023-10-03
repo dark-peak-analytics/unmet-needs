@@ -1,13 +1,4 @@
-################################################################################
-#
-# Script Name:        calculate_total_deaths.R
-# Script Description: Defines the function calculate_total_deaths(). This
-#                     function estimates the number of lives saved per
-#                     healthcare provider by deprivation quintile.
-#
-################################################################################
-
-#' @title Calculate the Total Number of Deaths prevented by healthcare provider.
+#' @title Calculate the Total Number of Deaths prevented by healthcare provider
 #' @description Estimates the total number of deaths per deprivation quintile in
 #' each geographical area with a designated healthcare provider.
 #' @details This function takes ... inputs and then ... to estimate the total
@@ -50,11 +41,11 @@
 #' )
 #' }
 calculate_total_deaths <- function(
-    mortality_rates_ = input_data_mQALE$`Mortality rate`[1:5],
-    mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
-    equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
+    mortality_rates_,
+    mortality_elasticity_,
+    equal_mortality_elasticity_,
     option_ = "estimated_mortality_elasticity",
-    imd_population_ = CCG_IMD_population_2019,
+    imd_population_,
     provider_ = "CCG") {
 
   ## Sanity checks:
@@ -115,6 +106,7 @@ calculate_total_deaths <- function(
     )
   } else {
     ## Estimate deaths resulting from expenditure change:
+    total_lives_saved <- `Overall population` <- NULL
     imd_pop_df <- data.table::as.data.table(imd_population_)
     imd_pop_df[
       ,

@@ -1,13 +1,4 @@
-################################################################################
-#
-# Script Name:        plot_average_deaths.R
-# Script Description: Defines the function plot_average_deaths(). This function
-#                     plots the average deaths per 100,000 population by
-#                     deprivation quintile.
-#
-################################################################################
-
-#' @title Plot the average deaths by deprivation quintile.
+#' @title Plot the average deaths by deprivation quintile
 #' @details Plot the average deaths.
 #'
 #' @param average_lives_saved_ An object representing the outputs of the function
@@ -20,8 +11,7 @@
 #' \dontrun{
 #' average_lives_saved_bar_chart <- plot_average_deaths()
 #' }
-plot_average_deaths <- function(
-    average_lives_saved_ = UnmetNeeds::calculate_average_deaths()) {
+plot_average_deaths <- function(average_lives_saved_) {
 
   ## Sanity checks:
 
@@ -32,6 +22,7 @@ plot_average_deaths <- function(
   average_lives_saved_plot_caption <- average_lives_saved_[["caption"]]
 
   ## Plot:
+  `Deaths prevented` <- `Deprivation Quintile` <- NULL
   average_lives_saved_plot <- average_lives_saved_plot_data |>
     ggplot2::ggplot(
       data = _,

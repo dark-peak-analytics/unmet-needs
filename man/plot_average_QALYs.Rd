@@ -2,9 +2,9 @@
 % Please edit documentation in R/plot_average_QALYs.R
 \name{plot_average_QALYs}
 \alias{plot_average_QALYs}
-\title{Plot the average change in Quality-Adjusted Life Years (QALYs).}
+\title{Plot the average change in Quality-Adjusted Life Years (QALYs)}
 \usage{
-plot_average_QALYs(average_QALYs_ = UnmetNeeds::calculate_average_QALYs())
+plot_average_QALYs(average_QALYs_)
 }
 \arguments{
 \item{average_QALYs_}{An object representing the outputs of the function
@@ -14,7 +14,7 @@ plot_average_QALYs(average_QALYs_ = UnmetNeeds::calculate_average_QALYs())
 A list containing ggplot2 objects.
 }
 \description{
-Plot the average change in Quality-Adjusted Life Years (QALYs).
+Plot the average change in Quality-Adjusted Life Years (QALYs)
 }
 \details{
 This function takes ... inputs and then ... to plot the average

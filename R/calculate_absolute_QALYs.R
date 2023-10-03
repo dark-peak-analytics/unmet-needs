@@ -1,13 +1,4 @@
-################################################################################
-#
-# Script Name:        calculate_absolute_QALYs.R
-# Script Description: Defines the function calculate_absolute_QALYs(). This
-#                     function estimates the absolute Quality-Adjusted Life
-#                     Years (QALY).
-#
-################################################################################
-
-#' @title Calculate Absolute Quality-Adjusted Life Years (QALYs).
+#' @title Calculate Absolute Quality-Adjusted Life Years (QALYs)
 #' @description Estimates the absolute Quality-Adjusted Life Year (QALY) per
 #' deprivation quintile.
 #' @details This function takes ... inputs and then ... to estimate the absolute
@@ -54,12 +45,12 @@
 #' )
 #' }
 calculate_absolute_QALYs <- function(
-    target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
-    baseline_health_ = input_data_mQALE$`Baseline health`[1:5],
-    mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
-    equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
+    target_maximum_health_,
+    baseline_health_,
+    mortality_elasticity_,
+    equal_mortality_elasticity_,
     option_ = "estimated_mortality_elasticity",
-    imd_population_ = CCG_IMD_population_2019,
+    imd_population_,
     provider_ = "CCG") {
 
   ## Sanity checks:
@@ -135,6 +126,7 @@ calculate_absolute_QALYs <- function(
     )
   } else {
     ## Estimate gain due to expenditure change:
+    total_change <- `Overall population` <- NULL
     QALY_gain_imd_pop <- data.table::as.data.table(imd_population_)
     QALY_gain_imd_pop_data <- lapply(
       X = QALY_gain,

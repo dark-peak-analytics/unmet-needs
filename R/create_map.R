@@ -1,15 +1,4 @@
-################################################################################
-#
-# Script Name:        create_map_plot.R
-# Script Description: Defines the function create_map_plot(). This function
-#                     creates a map using Leaflet displaying the average values
-#                     given by geographical areas representing areas served by
-#                     certain organisation.
-#
-################################################################################
-
 #' @title Create a landmap plot
-#'
 #' @description Creates a landmap plot of average values.
 #' @details Creates a landmap plot using Leaflet displaying the average values
 #' given by local authority in a dataframe

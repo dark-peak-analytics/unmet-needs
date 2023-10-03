@@ -53,7 +53,7 @@ shinydashboard::box(
       shiny::numericInput(
         inputId = "equal_mortality_elasticity",
         label = "Equal Mortality Elasticity",
-        value = input_data_mQALE$`Equal mortality elasticity`,
+        value = UnmetNeeds::input_data_mQALE$`Equal mortality elasticity`,
         min = 0,
         max = 1,
         step = 0.00001

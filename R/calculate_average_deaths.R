@@ -1,13 +1,4 @@
-################################################################################
-#
-# Script Name:        calculate_average_deaths.R
-# Script Description: Defines the function calculate_average_deaths(). This
-#                     function estimates the average number of lives saved per
-#                     100,000 population by deprivation quintile.
-#
-################################################################################
-
-#' @title Calculate Average Number of Deaths Prevented by Deprivation Quintile.
+#' @title Calculate Average Number of Deaths Prevented by Deprivation Quintile
 #' @description Estimates the the average Quality-Adjusted Life Year (QALY) per
 #' deprivation quintile.
 #' @details This function takes ... inputs and then ... to estimate the average
@@ -45,8 +36,8 @@
 #' )
 #' }
 calculate_average_deaths <- function(
-    total_lives_saved_ = UnmetNeeds::calculate_total_deaths()$data,
-    imd_population_ = CCG_IMD_population_2019) {
+    total_lives_saved_,
+    imd_population_) {
 
   ## Auxiliary data:
   quintile_names <- grep(
@@ -56,7 +47,9 @@ calculate_average_deaths <- function(
     value = TRUE
   )
   total_pop_quintile <- colSums(imd_population_[, quintile_names])
-  total_lives_saved_quintile <- colSums(total_lives_saved_[, ..quintile_names])
+  total_lives_saved_quintile <- colSums(
+    total_lives_saved_[, quintile_names, with = FALSE]
+  )
 
   ## Estimate average deaths per quintile:
   average_deaths_quintile <-
