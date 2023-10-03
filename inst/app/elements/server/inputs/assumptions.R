@@ -45,7 +45,7 @@ shiny::observe({
     choices = names(inputs_rv[["target_maximum_QALE"]]),
     selected = inputs_rv[["target_maximum_QALE"]] |>
       names() |>
-      _[1])
+      _[2])
 })
 
 maximum_QALE_option <- shiny::reactive({
@@ -54,3 +54,11 @@ maximum_QALE_option <- shiny::reactive({
     yes = "equal_mortality_elasticity",
     no = "estimated_mortality_elasticity")
 })
+
+shiny::observeEvent(
+  eventExpr = input$equal_mortality_elasticity,
+  handlerExpr = {
+    inputs_rv[["equal_mortality_elasticity"]] <-
+      input$equal_mortality_elasticity
+  }
+)

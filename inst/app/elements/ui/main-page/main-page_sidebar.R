@@ -20,12 +20,12 @@ shinydashboard::dashboardSidebar(
       tabName = "inputs"
     ),
     shinydashboard::menuItem(
-      text = "Impact on QALYs",
-      tabName = "qalys"
+      text = "Annual mortality impact",
+      tabName = "mortality"
     ),
     shinydashboard::menuItem(
-      text = "Impact on mortality",
-      tabName = "mortality"
+      text = "Lifelong QALYs impact",
+      tabName = "qalys"
     )
   ),
   shiny::br(),

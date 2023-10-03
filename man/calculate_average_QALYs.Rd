@@ -32,8 +32,9 @@ QALYs.
 average_QALYs <- calculate_average_QALYs(
   absolute_QALYs_ = calculate_absolute_QALYs(
     target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
-    baseline_health_ = input_data_mQALE$`Baseline health`,
+    baseline_health_ = input_data_mQALE$`Baseline health`[1:5],
     mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+    equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
     option_ = "estimated_mortality_elasticity",
     imd_population_ = CCG_IMD_population_2019,
     provider_ = "CCG"
@@ -43,8 +44,9 @@ average_QALYs <- calculate_average_QALYs(
 average_QALYs_equ_elas <- calculate_average_QALYs(
   absolute_QALYs_ = calculate_absolute_QALYs(
     target_maximum_health_ = input_data_mQALE$`Target maximum QALE`,
-    baseline_health_ = input_data_mQALE$`Baseline health`,
+    baseline_health_ = input_data_mQALE$`Baseline health`[1:5],
     mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+    equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
     option_ = "equal_mortality_elasticity",
     imd_population_ = CCG_IMD_population_2019,
     provider_ = "CCG"

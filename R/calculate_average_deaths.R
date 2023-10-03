@@ -23,8 +23,9 @@
 #' \dontrun{
 #' average_deaths <- calculate_average_deaths(
 #'   total_lives_saved_ = calculate_total_deaths(
-#'     mortality_rates_ = input_data_mQALE$`Mortality rate`,
+#'     mortality_rates_ = input_data_mQALE$`Mortality rate`[1:5],
 #'     mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+#'     equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
 #'     option_ = "estimated_mortality_elasticity",
 #'     imd_population_ = CCG_IMD_population_2019,
 #'     provider_ = "CCG"
@@ -33,8 +34,9 @@
 #' )
 #' average_deaths_equ_elas <- calculate_average_deaths(
 #'   total_lives_saved_ = calculate_total_deaths(
-#'     mortality_rates_ = input_data_mQALE$`Mortality rate`,
+#'     mortality_rates_ = input_data_mQALE$`Mortality rate`[1:5],
 #'     mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
+#'     equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
 #'     option_ = "equal_mortality_elasticity",
 #'     imd_population_ = CCG_IMD_population_2019,
 #'     provider_ = "CCG"

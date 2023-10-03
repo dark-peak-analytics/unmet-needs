@@ -31,11 +31,11 @@ shinydashboard::dashboardBody(
       local = TRUE
     )$value,
     source(
-      file.path(ui_path, "qalys", "qalys.R"),
+      file.path(ui_path, "mortality", "mortality.R"),
       local = TRUE
     )$value,
     source(
-      file.path(ui_path, "mortality", "mortality.R"),
+      file.path(ui_path, "qalys", "qalys.R"),
       local = TRUE
     )$value
   )

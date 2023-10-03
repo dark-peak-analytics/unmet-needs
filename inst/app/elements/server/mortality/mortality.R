@@ -34,7 +34,7 @@ waiter_deaths_table <- waiter::Waiter$new(
   hide_on_render  = TRUE
 )
 
-# Estimate Total Deaths --------------------------------------------------------
+# Estimate Average Lives Saved ---------------------------------------------------
 
 average_lives_saved <- shiny::reactiveValues()
 
@@ -46,6 +46,7 @@ shiny::observe({
     total_lives_saved_ = UnmetNeeds::calculate_total_deaths(
       mortality_rates_ = inputs_rv[["mortality_rates"]],
       mortality_elasticity_ = inputs_rv[["mortality_elasticity"]],
+      equal_mortality_elasticity_ = inputs_rv[["equal_mortality_elasticity"]],
       option_ = maximum_QALE_option(),
       imd_population_ = imd_pop_data,
       provider_ = inputs_rv[["entity"]]
@@ -60,7 +61,7 @@ shiny::observe({
   )
 })
 
-# Render Average Deaths outputs ------------------------------------------------
+# Render Average Lives Saved outputs -------------------------------------------
 
 output[["title_average_deaths"]] <- shiny::renderUI(
   expr = {
@@ -113,7 +114,7 @@ output[["plot_average_deaths"]] <- shiny::renderPlot(
   bg = "transparent"
 )
 
-# Estimate Absolute QALYs ------------------------------------------------------
+# Estimate Total Lives Saved ---------------------------------------------------
 
 total_deaths <- shiny::reactiveValues()
 
@@ -146,6 +147,7 @@ shiny::observe({
   total_deaths[["national"]] <- UnmetNeeds::calculate_total_deaths(
     mortality_rates_ = inputs_rv[["mortality_rates"]],
     mortality_elasticity_ = inputs_rv[["mortality_elasticity"]],
+    equal_mortality_elasticity_ = inputs_rv[["equal_mortality_elasticity"]],
     option_ = maximum_QALE_option(),
     imd_population_ = imd_population(),
     provider_ = inputs_rv[["entity"]]
@@ -270,6 +272,11 @@ total_deaths_df_data <- shiny::reactive({
                  total_outcome_name, quantile_names)
     )
 
+  # Save summary values
+  outputs_rv[["total_lives_saved"]] <- sum(tmp_table[[total_outcome_name]])
+  outputs_rv[["average_lives_saved"]] <- 1e5 *
+    (outputs_rv[["total_lives_saved"]] / sum(tmp_table[[tot_pop_names]]))
+
   # Create a vector of numeric column names
   numeric_cols <- names(tmp_table)[sapply(tmp_table, is.numeric)]
 
@@ -291,7 +298,29 @@ total_deaths_df_data <- shiny::reactive({
 })
 
 
-# Render Absolute QALYs outputs ------------------------------------------------
+# Render Total Lives Saved outputs ---------------------------------------------
+
+output[["summary_total_lives_saved"]] <- shiny::renderUI(
+  expr = {
+    shiny::req(total_deaths_df_data())
+
+    shiny::tagList(
+      paste0(
+        "Total lives saved in England: ",
+        round(outputs_rv[["total_lives_saved"]])  |>
+          format(big.mark = ","),
+        "."
+      ),
+      shiny::br(),
+      paste0(
+        "Average lives saved per 100,000 population in England: ",
+        round(outputs_rv[["average_lives_saved"]]) |>
+          format(big.mark = ","),
+        "."
+      )
+    )
+  }
+)
 
 output[["title_map_total_deaths"]] <- shiny::renderUI(
   expr = {
@@ -522,6 +551,35 @@ output[["download_deaths_table"]] <- shiny::downloadHandler(
       file = file,
       x = {
         tmp_df <- total_deaths_df_data()
+
+        tmp_df <- tmp_df[, c(
+          colnames(tmp_df)[colnames(tmp_df)!= "Total population"],
+          "Total population"
+        ), with = FALSE]
+
+        quantile_names <- grep(
+            x = colnames(inputs_rv[["IMD_population"]]),
+            pattern = "Q",
+            ignore.case = FALSE,
+            value = TRUE
+          )
+
+        entity <- grep(
+          x =  colnames(inputs_rv[["IMD_population"]]),
+          pattern = "nm",
+          ignore.case = TRUE,
+          value = TRUE
+        )
+
+        pop_df <- inputs_rv[["IMD_population"]][, c(entity, quantile_names)]
+
+        colnames(pop_df) <- c(inputs_rv[["entity"]],
+                              paste0(quantile_names, " population"))
+        tmp_df <- merge(
+          x = tmp_df,
+          y = pop_df,
+          by = inputs_rv[["entity"]]
+        )
 
         tmp_df[[inputs_rv[["entity"]]]] <- gsub(
           x =  tmp_df[[inputs_rv[["entity"]]]],
