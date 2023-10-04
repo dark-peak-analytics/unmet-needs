@@ -24,7 +24,7 @@ shinydashboard::dashboardSidebar(
       tabName = "mortality"
     ),
     shinydashboard::menuItem(
-      text = "Lifelong QALYs impact",
+      text = "QALYs impact",
       tabName = "qalys"
     )
   ),

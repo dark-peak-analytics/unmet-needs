@@ -242,7 +242,7 @@ total_deaths_df_data <- shiny::reactive({
       value = TRUE
     )
 
-  quantile_names <- df_colnames |>
+  quintile_names <- df_colnames |>
     grep(
       x = _,
       pattern = "Q",
@@ -269,14 +269,14 @@ total_deaths_df_data <- shiny::reactive({
   tmp_table <- total_deaths[["national"]][["data"]] |>
     subset(
       select = c(nhs_org_names, tot_pop_names, avg_outcome_name,
-                 total_outcome_name, quantile_names)
+                 total_outcome_name, quintile_names)
     )
 
   # Save summary values
   outputs_rv[["total_lives_saved"]] <- sum(tmp_table[[total_outcome_name]])
   outputs_rv[["average_lives_saved"]] <- 1e5 *
     (outputs_rv[["total_lives_saved"]] / sum(tmp_table[[tot_pop_names]]))
-  lives_saved_per_quintile <- colSums(tmp_table[, quantile_names, with = FALSE])
+  lives_saved_per_quintile <- colSums(tmp_table[, quintile_names, with = FALSE])
   reddit_score <- c(0.1, 0.3, 0.5, 0.7, 0.9)
   outputs_rv[["health_inequality_gap_deaths"]] <- lm(
     lives_saved_per_quintile ~ reddit_score
@@ -297,7 +297,7 @@ total_deaths_df_data <- shiny::reactive({
     "Total population",
     avg_outcome_name,
     "Total lives saved",
-    quantile_names
+    quintile_names
   )
 
   tmp_table
@@ -312,13 +312,6 @@ output[["summary_total_lives_saved"]] <- shiny::renderUI(
 
     shiny::tagList(
       paste0(
-        "Total lives saved in England: ",
-        round(outputs_rv[["total_lives_saved"]])  |>
-          format(big.mark = ","),
-        "."
-      ),
-      shiny::br(),
-      paste0(
         "Average lives saved per 100,000 population in England: ",
         round(outputs_rv[["average_lives_saved"]]) |>
           format(big.mark = ","),
@@ -326,8 +319,15 @@ output[["summary_total_lives_saved"]] <- shiny::renderUI(
       ),
       shiny::br(),
       paste0(
+        "Total lives saved in England: ",
+        round(outputs_rv[["total_lives_saved"]])  |>
+          format(big.mark = ","),
+        "."
+      ),
+      shiny::br(),
+      paste0(
         "Impact on health inequality gap in England: ",
-        round(outputs_rv[["health_inequality_gap_deaths"]], digits = 2) |>
+        round(outputs_rv[["health_inequality_gap_deaths"]], digits = 0) |>
           format(big.mark = ","),
         " lives saved."
       )
@@ -570,7 +570,7 @@ output[["download_deaths_table"]] <- shiny::downloadHandler(
           "Total population"
         ), with = FALSE]
 
-        quantile_names <- grep(
+        quintile_names <- grep(
             x = colnames(inputs_rv[["IMD_population"]]),
             pattern = "Q",
             ignore.case = FALSE,
@@ -584,10 +584,10 @@ output[["download_deaths_table"]] <- shiny::downloadHandler(
           value = TRUE
         )
 
-        pop_df <- inputs_rv[["IMD_population"]][, c(entity, quantile_names)]
+        pop_df <- inputs_rv[["IMD_population"]][, c(entity, quintile_names)]
 
         colnames(pop_df) <- c(inputs_rv[["entity"]],
-                              paste0(quantile_names, " population"))
+                              paste0(quintile_names, " population"))
         tmp_df <- merge(
           x = tmp_df,
           y = pop_df,

@@ -253,7 +253,7 @@ absolute_QALYs_df_data <- shiny::reactive({
       value = TRUE
     )
 
-  quantile_names <- df_colnames |>
+  quintile_names <- df_colnames |>
     grep(
       x = _,
       pattern = "Q",
@@ -280,19 +280,33 @@ absolute_QALYs_df_data <- shiny::reactive({
   tmp_table <- absolute_QALYs[["national"]][["data"]][[1]] |>
     subset(
       select = c(nhs_org_names, tot_pop_names, avg_outcome_name,
-                 total_outcome_name, quantile_names)
+                 total_outcome_name, quintile_names)
     )
 
   # Save summary values
-  outputs_rv[["total_QALYs_gained"]] <- sum(tmp_table[[total_outcome_name]])
-  outputs_rv[["average_QALYs_gained"]] <- 1e5 *
-    (outputs_rv[["total_QALYs_gained"]] / sum(tmp_table[[tot_pop_names]]))
-  QALYs_per_quintile <- colSums(tmp_table[, quantile_names, with = FALSE])
+  ## Slope of Inequality (SII):
+  QALYs_per_quintile <- colSums(tmp_table[, quintile_names, with = FALSE])
+  population_per_quintile <- colSums(
+    inputs_rv[["IMD_population"]][, quintile_names]
+  )
+  QALYs_per_person_quintile <- QALYs_per_quintile / population_per_quintile
   reddit_score <- c(0.1, 0.3, 0.5, 0.7, 0.9)
   outputs_rv[["health_inequality_gap_QALYs"]] <- lm(
-    QALYs_per_quintile ~ reddit_score
+    QALYs_per_person_quintile ~ reddit_score
   )$coefficients[2] |>
     unname()
+  ## Total QALYs gained:
+  outputs_rv[["total_QALYs_gained"]] <- sum(tmp_table[[total_outcome_name]]) /
+    80
+  ## QALYs per 100,000 gained:
+  outputs_rv[["average_QALYs_gained"]] <- 1e5 *
+    (outputs_rv[["total_QALYs_gained"]] / sum(tmp_table[[tot_pop_names]]))
+
+  # Re-scale lifelong QALYs to annual QALYs by dividing QALYs gained by 80:
+  rescaled_cols = c(quintile_names, total_outcome_name, avg_outcome_name)
+  tmp_table[,
+            (rescaled_cols) := lapply(.SD, `/`, 80L),
+            .SDcols = rescaled_cols]
 
   # Create a vector of numeric column names
   numeric_cols <- names(tmp_table)[sapply(tmp_table, is.numeric)]
@@ -308,7 +322,7 @@ absolute_QALYs_df_data <- shiny::reactive({
     "Total population",
     avg_outcome_name,
     "Total QALY change",
-    quantile_names
+    quintile_names
   )
 
   tmp_table
@@ -324,26 +338,34 @@ output[["summary_absolute_QALYs"]] <- shiny::renderUI(
 
     shiny::tagList(
       paste0(
-        "Total Quality Adjusted Life Years (QALYs) gained in England: ",
-        round(outputs_rv[["total_QALYs_gained"]]) |>
-          format(big.mark = ","),
-        "."
-      ),
-      shiny::br(),
-      paste0(
-        "Average QALYs gained per 100,000 population in England: ",
+        "Average Quality Adjusted Life Years (QALYs) gained per 100,000 ",
+        "population in England: ",
         round(outputs_rv[["average_QALYs_gained"]]) |>
           format(big.mark = ","),
         "."
       ),
       shiny::br(),
       paste0(
+        "Total QALYs gained in England: ",
+        round(outputs_rv[["total_QALYs_gained"]]) |>
+          format(big.mark = ","),
+        "."
+      ),
+      shiny::br(),
+      paste0(
+        "QALYs per Life Saved in England: ",
+        round(outputs_rv[["total_QALYs_gained"]]/
+                outputs_rv[["total_lives_saved"]]) |>
+          format(big.mark = ","),
+        "."
+      ),
+      shiny::br(),
+      paste0(
         "Impact on health inequality gap in England: ",
-        round(outputs_rv[["health_inequality_gap_QALYs"]], digits = 2) |>
+        round(outputs_rv[["health_inequality_gap_QALYs"]], digits = 3) |>
           format(big.mark = ","),
         " QALYs."
-      )
-    )
+      )    )
   }
 )
 
@@ -582,7 +604,7 @@ output[["download_table"]] <- shiny::downloadHandler(
           "Total population"
         ), with = FALSE]
 
-        quantile_names <- grep(
+        quintile_names <- grep(
           x = colnames(inputs_rv[["IMD_population"]]),
           pattern = "Q",
           ignore.case = FALSE,
@@ -596,10 +618,10 @@ output[["download_table"]] <- shiny::downloadHandler(
           value = TRUE
         )
 
-        pop_df <- inputs_rv[["IMD_population"]][, c(entity, quantile_names)]
+        pop_df <- inputs_rv[["IMD_population"]][, c(entity, quintile_names)]
 
         colnames(pop_df) <- c(inputs_rv[["entity"]],
-                              paste0(quantile_names, " population"))
+                              paste0(quintile_names, " population"))
         tmp_df <- merge(
           x = tmp_df,
           y = pop_df,
