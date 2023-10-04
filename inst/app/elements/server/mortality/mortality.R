@@ -276,6 +276,12 @@ total_deaths_df_data <- shiny::reactive({
   outputs_rv[["total_lives_saved"]] <- sum(tmp_table[[total_outcome_name]])
   outputs_rv[["average_lives_saved"]] <- 1e5 *
     (outputs_rv[["total_lives_saved"]] / sum(tmp_table[[tot_pop_names]]))
+  lives_saved_per_quintile <- colSums(tmp_table[, quantile_names, with = FALSE])
+  reddit_score <- c(0.1, 0.3, 0.5, 0.7, 0.9)
+  outputs_rv[["health_inequality_gap_deaths"]] <- lm(
+    lives_saved_per_quintile ~ reddit_score
+  )$coefficients[2] |>
+    unname()
 
   # Create a vector of numeric column names
   numeric_cols <- names(tmp_table)[sapply(tmp_table, is.numeric)]
@@ -317,6 +323,13 @@ output[["summary_total_lives_saved"]] <- shiny::renderUI(
         round(outputs_rv[["average_lives_saved"]]) |>
           format(big.mark = ","),
         "."
+      ),
+      shiny::br(),
+      paste0(
+        "Impact on health inequality gap in England: ",
+        round(outputs_rv[["health_inequality_gap_deaths"]], digits = 2) |>
+          format(big.mark = ","),
+        " lives saved."
       )
     )
   }

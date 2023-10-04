@@ -287,6 +287,12 @@ absolute_QALYs_df_data <- shiny::reactive({
   outputs_rv[["total_QALYs_gained"]] <- sum(tmp_table[[total_outcome_name]])
   outputs_rv[["average_QALYs_gained"]] <- 1e5 *
     (outputs_rv[["total_QALYs_gained"]] / sum(tmp_table[[tot_pop_names]]))
+  QALYs_per_quintile <- colSums(tmp_table[, quantile_names, with = FALSE])
+  reddit_score <- c(0.1, 0.3, 0.5, 0.7, 0.9)
+  outputs_rv[["health_inequality_gap_QALYs"]] <- lm(
+    QALYs_per_quintile ~ reddit_score
+  )$coefficients[2] |>
+    unname()
 
   # Create a vector of numeric column names
   numeric_cols <- names(tmp_table)[sapply(tmp_table, is.numeric)]
@@ -332,13 +338,11 @@ output[["summary_absolute_QALYs"]] <- shiny::renderUI(
       ),
       shiny::br(),
       paste0(
-        "QALYs per Life Saved in England: ",
-        round(outputs_rv[["total_QALYs_gained"]]/
-                outputs_rv[["total_lives_saved"]]) |>
+        "Impact on health inequality gap in England: ",
+        round(outputs_rv[["health_inequality_gap_QALYs"]], digits = 2) |>
           format(big.mark = ","),
-        "."
+        " QALYs."
       )
-
     )
   }
 )
