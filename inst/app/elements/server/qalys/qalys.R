@@ -295,12 +295,17 @@ absolute_QALYs_df_data <- shiny::reactive({
     QALYs_per_person_quintile ~ reddit_score
   )$coefficients[2] |>
     unname()
+  outputs_rv[["health_inequality_gap_b_QALYs"]] <- lm(
+    inputs_rv[["baseline_health"]] ~ reddit_score
+  )$coefficients[2] |>
+    unname()
   ## Total QALYs gained:
-  outputs_rv[["total_QALYs_gained"]] <- sum(tmp_table[[total_outcome_name]]) /
+  outputs_rv[["total_QALYs_gained"]] <- sum(tmp_table[[total_outcome_name]])
+  outputs_rv[["total_QALYs_LE_gained"]] <- outputs_rv[["total_QALYs_gained"]] /
     80
   ## QALYs per 100,000 gained:
-  outputs_rv[["average_QALYs_gained"]] <- 1e5 *
-    (outputs_rv[["total_QALYs_gained"]] / sum(tmp_table[[tot_pop_names]]))
+  outputs_rv[["average_QALYs_gained"]] <- outputs_rv[["total_QALYs_gained"]] /
+    sum(tmp_table[[tot_pop_names]])
 
   # Re-scale lifelong QALYs to annual QALYs by dividing QALYs gained by 80:
   rescaled_cols = c(quintile_names, total_outcome_name, avg_outcome_name)
@@ -338,34 +343,40 @@ output[["summary_absolute_QALYs"]] <- shiny::renderUI(
 
     shiny::tagList(
       paste0(
-        "Average Quality Adjusted Life Years (QALYs) gained per 100,000 ",
-        "population in England: ",
-        round(outputs_rv[["average_QALYs_gained"]]) |>
+        "Average impact on QALE per person in England: ",
+        round(outputs_rv[["average_QALYs_gained"]], digits = 3) |>
           format(big.mark = ","),
-        "."
+        " QALYs."
       ),
       shiny::br(),
       paste0(
-        "Total QALYs gained in England: ",
-        round(outputs_rv[["total_QALYs_gained"]]) |>
+        "Modelled baseline QALE gap in England: ",
+        round(outputs_rv[["health_inequality_gap_b_QALYs"]], digits = 3) |>
           format(big.mark = ","),
-        "."
+        " QALYs."
       ),
       shiny::br(),
       paste0(
-        "QALYs per Life Saved in England: ",
-        round(outputs_rv[["total_QALYs_gained"]]/
-                outputs_rv[["total_lives_saved"]]) |>
-          format(big.mark = ","),
-        "."
-      ),
-      shiny::br(),
-      paste0(
-        "Impact on health inequality gap in England: ",
+        "Impact on modelled baseline QALE gap in England: ",
         round(outputs_rv[["health_inequality_gap_QALYs"]], digits = 3) |>
           format(big.mark = ","),
         " QALYs."
-      )    )
+      ),
+      shiny::br(),
+      paste0(
+        "Total lifetime QALYs gained in England: ",
+        round(outputs_rv[["total_QALYs_gained"]]) |>
+          format(big.mark = ","),
+        " QALYs."
+      ),
+      shiny::br(),
+      paste0(
+        "Total annual QALYs gained in England (assuming life expectancy of 80):",
+        round(outputs_rv[["total_QALYs_LE_gained"]]) |>
+          format(big.mark = ","),
+        " QALYs."
+      )
+    )
   }
 )
 
@@ -375,7 +386,7 @@ output[["title_map_absolute_QALYs"]] <- shiny::renderUI(
 
     shiny::tagList(
       paste0(
-        "Average Health Impact by ",
+        "Average Impact on QALE by ",
         inputs_rv[["entity"]]
       ),
       shiny::tags$div(
@@ -521,7 +532,7 @@ tag_downloadable_map_title_span <- shiny::tags$style(
 
 downloadable_map_title_text <- shiny::reactive({
   paste0(
-    "Average Health Impact by ",
+    "Average Impact on QALE by ",
     inputs_rv[["entity"]]
   )
 })
@@ -559,7 +570,7 @@ output[["download_map"]] <- shiny::downloadHandler(
   filename = function() {
     paste0(
       "QALYs: ",
-      "Average Health Impact by ",
+      "Average Impact on QALE by ",
       inputs_rv[["entity"]],
       ".png"
     )

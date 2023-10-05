@@ -23,7 +23,7 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' total_lives_saved <- calculate_total_deaths(
+#' total_deaths <- calculate_total_deaths(
 #'   mortality_rates_ = input_data_mQALE$`Mortality rate`[1:5],
 #'   mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
 #'   equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
@@ -31,7 +31,7 @@
 #'   imd_population_ = CCG_IMD_population_2019,
 #'   provider_ = "CCG"
 #' )
-#' total_lives_saved_equ_elas <- calculate_total_deaths(
+#' total_deaths_equ_elas <- calculate_total_deaths(
 #'   mortality_rates_ = input_data_mQALE$`Mortality rate`[1:5],
 #'   mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
 #'   equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
@@ -95,18 +95,19 @@ calculate_total_deaths <- function(
 
   ## Calculate total deaths per deprivation (IMD) quintile:
   lives_saved <- mortality_rates[quintile_names] * elasticities[quintile_names]
+  deaths <- lives_saved * -1
 
   if(is.null(imd_population_)) {
 
     return(
       list(
-        "title" = "Lives saved per 100,000 per deprivation quintile",
-        "data" = lives_saved
+        "title" = "Deaths per 100,000 per deprivation quintile",
+        "data" = deaths
       )
     )
   } else {
     ## Estimate deaths resulting from expenditure change:
-    total_lives_saved <- `Overall population` <- NULL
+    total_deaths <- `Overall population` <- NULL
     imd_pop_df <- data.table::as.data.table(imd_population_)
     imd_pop_df[
       ,
@@ -115,7 +116,7 @@ calculate_total_deaths <- function(
         FUN = function(.x) {
           round(
             x = .SD[[.x]] *
-              (lives_saved[[.x]] * imd_pop_df[["Expenditure change (%)"]]) /
+              (deaths[[.x]] * imd_pop_df[["Expenditure change (%)"]]) /
               1e5,
             digits = 0
           )
@@ -124,12 +125,12 @@ calculate_total_deaths <- function(
       .SDcols = quintile_names
     ][
       ,
-      total_lives_saved := round(x = rowSums(.SD, na.rm = TRUE), digits = 0),
+      total_deaths := round(x = rowSums(.SD, na.rm = TRUE), digits = 0),
       .SDcols = quintile_names
     ][
       ,
-      "Average lives saved (100,000 population)" :=
-        round(x = (total_lives_saved / `Overall population`) * 1e5, digits = 0)
+      "Average Mortality Impact (100,000 population)" :=
+        round(x = (total_deaths / `Overall population`) * 1e5, digits = 0)
     ]
 
     imd_pop_df <- imd_pop_df |>
@@ -141,8 +142,10 @@ calculate_total_deaths <- function(
     return(
       list(
         "title" = paste0(
-          "Results",
-          if(!is.null(provider_)) paste0(" by ", provider_) else NULL
+          "Mortality Impact Results",
+          if(!is.null(provider_)) paste0(" by ", provider_) else NULL,
+          if(!is.null(provider_)) paste0(" and Deprivation Quintile")
+          else paste0(" Deprivation Quintile")
         ),
         "data" = imd_pop_df
       )

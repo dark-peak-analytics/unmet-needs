@@ -45,7 +45,7 @@ number of deaths.
 }
 \examples{
 \dontrun{
-total_lives_saved <- calculate_total_deaths(
+total_deaths <- calculate_total_deaths(
   mortality_rates_ = input_data_mQALE$`Mortality rate`[1:5],
   mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
   equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
@@ -53,7 +53,7 @@ total_lives_saved <- calculate_total_deaths(
   imd_population_ = CCG_IMD_population_2019,
   provider_ = "CCG"
 )
-total_lives_saved_equ_elas <- calculate_total_deaths(
+total_deaths_equ_elas <- calculate_total_deaths(
   mortality_rates_ = input_data_mQALE$`Mortality rate`[1:5],
   mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
   equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,

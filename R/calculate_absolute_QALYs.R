@@ -161,8 +161,10 @@ calculate_absolute_QALYs <- function(
     return(
       list(
         "title" = paste0(
-          "Results",
-          if(!is.null(provider_)) paste0(" by ", provider_) else NULL
+          "QALE Impact Results",
+          if(!is.null(provider_)) paste0(" by ", provider_) else NULL,
+          if(!is.null(provider_)) paste0(" and Deprivation Quintile")
+          else paste0(" Deprivation Quintile")
         ),
         "data" = QALY_gain_imd_pop_data
       )

@@ -4,10 +4,10 @@
 \alias{plot_average_deaths}
 \title{Plot the average deaths by deprivation quintile}
 \usage{
-plot_average_deaths(average_lives_saved_)
+plot_average_deaths(average_deaths_)
 }
 \arguments{
-\item{average_lives_saved_}{An object representing the outputs of the function
+\item{average_deaths_}{An object representing the outputs of the function
 \link[UnmetNeeds]{calculate_average_deaths}.}
 }
 \value{
@@ -21,6 +21,6 @@ Plot the average deaths.
 }
 \examples{
 \dontrun{
-average_lives_saved_bar_chart <- plot_average_deaths()
+average_deaths_bar_chart <- plot_average_deaths()
 }
 }

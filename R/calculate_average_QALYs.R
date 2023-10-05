@@ -56,15 +56,15 @@ calculate_average_QALYs <- function(
 
   ## Estimate average QALYs change per quintile:
   average_QALYs_change_quintile <-
-    (total_QALYs_change_quintile / total_pop_quintile) * 1e5
+    (total_QALYs_change_quintile / total_pop_quintile)
 
   return(
     list(
       "title" = paste0(
-        "Average Health Impact by Deprivation Quintile"
+        "Average Impact on QALE by Deprivation Quintile"
       ),
       "subtitle" = paste0(
-        "Quality-Adjusted Life Years (QALYs) per 100,000 Population in Quintile"
+        "Quality-Adjusted Life Expectancy (QALE) per Person in Quintile"
       ),
       "caption" = paste0(
         "Average QALYs estimated assuming ",
