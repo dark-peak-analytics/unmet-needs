@@ -327,7 +327,7 @@ output[["summary_total_deaths"]] <- shiny::renderUI(
         "Average mortality impact per 100,000 population in England: ",
         round(outputs_rv[["average_deaths"]]) |>
           format(big.mark = ","),
-        "."
+        " deaths."
       ),
       shiny::br(),
       paste0(
@@ -348,7 +348,7 @@ output[["summary_total_deaths"]] <- shiny::renderUI(
         "Total deaths in England: ",
         round(outputs_rv[["total_deaths"]])  |>
           format(big.mark = ","),
-        "."
+        " deaths."
       )
     )
   }
