@@ -34,16 +34,16 @@ waiter_deaths_table <- waiter::Waiter$new(
   hide_on_render  = TRUE
 )
 
-# Estimate Average Lives Saved ---------------------------------------------------
+# Estimate Average Deaths ------------------------------------------------------
 
-average_lives_saved <- shiny::reactiveValues()
+average_deaths <- shiny::reactiveValues()
 
 shiny::observe({
   imd_pop_data <- inputs_rv[["IMD_population"]]
   imd_pop_data[["Expenditure change (%)"]] <- input$pcnt_change
 
-  average_lives_saved[["data"]] <- UnmetNeeds::calculate_average_deaths(
-    total_lives_saved_ = UnmetNeeds::calculate_total_deaths(
+  average_deaths[["data"]] <- UnmetNeeds::calculate_average_deaths(
+    total_deaths_ = UnmetNeeds::calculate_total_deaths(
       mortality_rates_ = inputs_rv[["mortality_rates"]],
       mortality_elasticity_ = inputs_rv[["mortality_elasticity"]],
       equal_mortality_elasticity_ = inputs_rv[["equal_mortality_elasticity"]],
@@ -56,20 +56,20 @@ shiny::observe({
 })
 
 shiny::observe({
-  average_lives_saved[["plot"]] <- UnmetNeeds::plot_average_deaths(
-    average_lives_saved_ = average_lives_saved[["data"]]
+  average_deaths[["plot"]] <- UnmetNeeds::plot_average_deaths(
+    average_deaths_ = average_deaths[["data"]]
   )
 })
 
-# Render Average Lives Saved outputs -------------------------------------------
+# Render Average Deaths outputs ------------------------------------------------
 
 output[["title_average_deaths"]] <- shiny::renderUI(
   expr = {
-    shiny::req(average_lives_saved[["data"]])
+    shiny::req(average_deaths[["data"]])
 
     shiny::tagList(
       paste0(
-        average_lives_saved[["data"]][["title"]]
+        average_deaths[["data"]][["title"]]
       ),
       shiny::tags$div(
         title = "Download Plot",
@@ -89,21 +89,21 @@ output[["title_average_deaths"]] <- shiny::renderUI(
 
 output[["subtitle_average_deaths"]] <- shiny::renderText(
   expr = {
-    shiny::req(average_lives_saved[["data"]])
+    shiny::req(average_deaths[["data"]])
 
     paste0(
-      average_lives_saved[["data"]][["subtitle"]]
+      average_deaths[["data"]][["subtitle"]]
     )
   }
 )
 
 output[["plot_average_deaths"]] <- shiny::renderPlot(
   expr = {
-    shiny::req(average_lives_saved[["plot"]])
+    shiny::req(average_deaths[["plot"]])
 
     waiter_deaths_plot$show()
 
-    average_lives_saved[["plot"]]$data +
+    average_deaths[["plot"]]$data +
       ggplot2::labs(
         title = NULL,
         subtitle = NULL
@@ -114,7 +114,7 @@ output[["plot_average_deaths"]] <- shiny::renderPlot(
   bg = "transparent"
 )
 
-# Estimate Total Lives Saved ---------------------------------------------------
+# Estimate Total Deaths --------------------------------------------------------
 
 total_deaths <- shiny::reactiveValues()
 
@@ -160,7 +160,7 @@ total_deaths_map <- shiny::reactive({
   # Create_map() function expects the main outcome data to be under column Value
   value_df <- total_deaths[["national"]]$data
   names(value_df)[
-    names(value_df) == "Average lives saved (100,000 population)"] <- "Value"
+    names(value_df) == "Average Mortality Impact (100,000 population)"] <- "Value"
 
   # Ensure SP data is the same as the value_df; i.e. subset as needed
   sp_df <- inputs_rv[["spdf_2019"]]
@@ -212,7 +212,7 @@ total_deaths_map <- shiny::reactive({
   UnmetNeeds::create_map_plot(
     sp_df_ = sp_df,
     value_df_ = value_df,
-    var_nm_ = paste("Lives saved"),
+    var_nm_ = paste("Deaths"),
     value_year_ = NA,
     value_digits = 0
   ) |>
@@ -242,7 +242,7 @@ total_deaths_df_data <- shiny::reactive({
       value = TRUE
     )
 
-  quantile_names <- df_colnames |>
+  quintile_names <- df_colnames |>
     grep(
       x = _,
       pattern = "Q",
@@ -269,13 +269,31 @@ total_deaths_df_data <- shiny::reactive({
   tmp_table <- total_deaths[["national"]][["data"]] |>
     subset(
       select = c(nhs_org_names, tot_pop_names, avg_outcome_name,
-                 total_outcome_name, quantile_names)
+                 total_outcome_name, quintile_names)
     )
 
   # Save summary values
-  outputs_rv[["total_lives_saved"]] <- sum(tmp_table[[total_outcome_name]])
-  outputs_rv[["average_lives_saved"]] <- 1e5 *
-    (outputs_rv[["total_lives_saved"]] / sum(tmp_table[[tot_pop_names]]))
+  ## Slope of Inequality (SII):
+  deaths_per_quintile <- colSums(tmp_table[, quintile_names, with = FALSE])
+  population_per_quintile <- colSums(
+    inputs_rv[["IMD_population"]][, quintile_names]
+  )
+  deaths_per_1e5_quintile <- (deaths_per_quintile / population_per_quintile) *
+    1e5
+  reddit_score <- c(0.1, 0.3, 0.5, 0.7, 0.9)
+  outputs_rv[["health_inequality_gap_deaths"]] <- lm(
+    deaths_per_1e5_quintile ~ reddit_score
+  )$coefficients[2] |>
+    unname()
+  outputs_rv[["health_inequality_gap_b_deaths"]] <- lm(
+    inputs_rv[["mortality_rates"]] ~ reddit_score
+  )$coefficients[2] |>
+    unname()
+  ## Total deaths
+  outputs_rv[["total_deaths"]] <- sum(tmp_table[[total_outcome_name]])
+  ## Average deaths
+  outputs_rv[["average_deaths"]] <- 1e5 *
+    (outputs_rv[["total_deaths"]] / sum(tmp_table[[tot_pop_names]]))
 
   # Create a vector of numeric column names
   numeric_cols <- names(tmp_table)[sapply(tmp_table, is.numeric)]
@@ -290,33 +308,48 @@ total_deaths_df_data <- shiny::reactive({
     inputs_rv[["entity"]],
     "Total population",
     avg_outcome_name,
-    "Total lives saved",
-    quantile_names
+    "Total Deaths",
+    quintile_names
   )
 
   tmp_table
 })
 
 
-# Render Total Lives Saved outputs ---------------------------------------------
+# Render Total Deaths outputs --------------------------------------------------
 
-output[["summary_total_lives_saved"]] <- shiny::renderUI(
+output[["summary_total_deaths"]] <- shiny::renderUI(
   expr = {
     shiny::req(total_deaths_df_data())
 
     shiny::tagList(
       paste0(
-        "Total lives saved in England: ",
-        round(outputs_rv[["total_lives_saved"]])  |>
+        "Average mortality impact per 100,000 in England: ",
+        round(outputs_rv[["average_deaths"]]) |>
           format(big.mark = ","),
-        "."
+        " deaths."
       ),
       shiny::br(),
       paste0(
-        "Average lives saved per 100,000 population in England: ",
-        round(outputs_rv[["average_lives_saved"]]) |>
+        "Modelled baseline mortality gap per 100,000 in England (most ",
+        "deprived minus least deprived): ",
+        round(outputs_rv[["health_inequality_gap_b_deaths"]] * -1, digits = 2) |>
           format(big.mark = ","),
-        "."
+        " deaths."
+      ),
+      shiny::br(),
+      paste0(
+        "Impact on modelled mortality gap per 100,000 in England: ",
+        round(outputs_rv[["health_inequality_gap_deaths"]] * -1, digits = 2) |>
+          format(big.mark = ","),
+        " deaths."
+      ),
+      shiny::br(),
+      paste0(
+        "Total deaths in England: ",
+        round(outputs_rv[["total_deaths"]])  |>
+          format(big.mark = ","),
+        " deaths."
       )
     )
   }
@@ -328,7 +361,7 @@ output[["title_map_total_deaths"]] <- shiny::renderUI(
 
     shiny::tagList(
       paste0(
-        "Average Health Impact by ",
+        "Average Mortality Impact by ",
         inputs_rv[["entity"]]
       ),
       shiny::tags$div(
@@ -352,7 +385,7 @@ output[["subtitle_map_total_deaths"]] <- shiny::renderText(
     shiny::req(total_deaths[["national"]])
 
     paste0(
-      "Lives saved per 100,000 Population in ",
+      "Deaths per 100,000 Population in ",
       inputs_rv[["entity"]]
     )
   }
@@ -425,8 +458,8 @@ output[["table_total_deaths"]] <- DT::renderDataTable(
 output[["download_deaths_plot"]] <- shiny::downloadHandler(
   filename = function() {
     paste0(
-      "Lives Saved: ",
-      average_lives_saved[["data"]][["title"]],
+      "Deaths: ",
+      average_deaths[["data"]][["title"]],
       ".png"
     )
   },
@@ -437,7 +470,7 @@ output[["download_deaths_plot"]] <- shiny::downloadHandler(
       dpi = 300,
       width = 7,
       height = 4,
-      plot = average_lives_saved[["plot"]]$data
+      plot = average_deaths[["plot"]]$data
     )
   }
 )
@@ -474,13 +507,13 @@ tag_downloadable_deaths_map_title_span <- shiny::tags$style(
 
 downloadable_deaths_map_title_text <- shiny::reactive({
   paste0(
-    "Average Health Impact by ",
+    "Average Mortality Impact by ",
     inputs_rv[["entity"]]
   )
 })
 downloadable_deaths_map_subtitle_text <- shiny::reactive({
   paste0(
-    "Lives saved per 100,000 Population in ",
+    "Deaths per 100,000 Population in ",
     inputs_rv[["entity"]]
   )
 })
@@ -511,8 +544,8 @@ downloadable_deaths_map_subtitle <- shiny::reactive({
 output[["download_deaths_map"]] <- shiny::downloadHandler(
   filename = function() {
     paste0(
-      "Lives Saved: ",
-      "Average Health Impact by ",
+      "Deaths: ",
+      "Average Mortality Impact by ",
       inputs_rv[["entity"]],
       ".png"
     )
@@ -541,7 +574,7 @@ output[["download_deaths_map"]] <- shiny::downloadHandler(
 output[["download_deaths_table"]] <- shiny::downloadHandler(
   filename = function() {
     paste0(
-      "Lives Saved: ",
+      "Deaths: ",
       total_deaths[["national"]][["title"]],
       ".csv"
     )
@@ -557,7 +590,7 @@ output[["download_deaths_table"]] <- shiny::downloadHandler(
           "Total population"
         ), with = FALSE]
 
-        quantile_names <- grep(
+        quintile_names <- grep(
             x = colnames(inputs_rv[["IMD_population"]]),
             pattern = "Q",
             ignore.case = FALSE,
@@ -571,10 +604,10 @@ output[["download_deaths_table"]] <- shiny::downloadHandler(
           value = TRUE
         )
 
-        pop_df <- inputs_rv[["IMD_population"]][, c(entity, quantile_names)]
+        pop_df <- inputs_rv[["IMD_population"]][, c(entity, quintile_names)]
 
         colnames(pop_df) <- c(inputs_rv[["entity"]],
-                              paste0(quantile_names, " population"))
+                              paste0(quintile_names, " population"))
         tmp_df <- merge(
           x = tmp_df,
           y = pop_df,

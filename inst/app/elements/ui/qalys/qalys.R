@@ -11,7 +11,10 @@ shinydashboard::tabItem(
   tabName = "qalys",
   shiny::fluidRow(
     shinydashboard::box(
-      title = "Summary",
+      title = paste(
+        "Impact on Quality Adjusted Life Expectancy (QALE) of permanent",
+        "lifetime expenditure change"
+      ),
       status = "info",
       collapsible = FALSE,
       collapsed = FALSE,

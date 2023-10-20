@@ -3,7 +3,7 @@
 #' deprivation quintile.
 #' @details This function takes ... inputs and then ... to estimate the average
 #' QALYs.
-#' @param total_lives_saved_ Dataframe or data table representing the outputs of
+#' @param total_deaths_ Dataframe or data table representing the outputs of
 #' the \link[UnmetNeeds]{calculate_absolute_QALYs}.
 #' @param imd_population_ Dataframe with population distribution by deprivation.
 #'
@@ -13,7 +13,7 @@
 #' @examples
 #' \dontrun{
 #' average_deaths <- calculate_average_deaths(
-#'   total_lives_saved_ = calculate_total_deaths(
+#'   total_deaths_ = calculate_total_deaths(
 #'     mortality_rates_ = input_data_mQALE$`Mortality rate`[1:5],
 #'     mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
 #'     equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
@@ -24,7 +24,7 @@
 #'   imd_population_ = CCG_IMD_population_2019
 #' )
 #' average_deaths_equ_elas <- calculate_average_deaths(
-#'   total_lives_saved_ = calculate_total_deaths(
+#'   total_deaths_ = calculate_total_deaths(
 #'     mortality_rates_ = input_data_mQALE$`Mortality rate`[1:5],
 #'     mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
 #'     equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
@@ -36,41 +36,41 @@
 #' )
 #' }
 calculate_average_deaths <- function(
-    total_lives_saved_,
+    total_deaths_,
     imd_population_) {
 
   ## Auxiliary data:
   quintile_names <- grep(
     pattern = "Q",
-    x = colnames(total_lives_saved_),
+    x = colnames(total_deaths_),
     ignore.case = TRUE,
     value = TRUE
   )
   total_pop_quintile <- colSums(imd_population_[, quintile_names])
-  total_lives_saved_quintile <- colSums(
-    total_lives_saved_[, quintile_names, with = FALSE]
+  total_deaths_quintile <- colSums(
+    total_deaths_[, quintile_names, with = FALSE]
   )
 
   ## Estimate average deaths per quintile:
   average_deaths_quintile <-
-    (total_lives_saved_quintile / total_pop_quintile) * 1e5
+    (total_deaths_quintile / total_pop_quintile) * 1e5
 
   return(
     list(
       "title" = paste0(
-        "Average Health Impact by Deprivation Quintile"
+        "Average Mortality Impact by Deprivation Quintile"
       ),
       "subtitle" = paste0(
-        "Lives saved per 100,000 Population in Quintile"
+        "Deaths per 100,000 Population in Quintile"
       ),
       "caption" = paste0(
-        "Deaths prevented are estimated assuming ",
+        "Mortality impact estimated assuming ",
         imd_population_$`Expenditure change (%)`[[1]],
         "% change in national healthcare expenditure."
       ),
       "data" = data.table::data.table(
         "Deprivation Quintile" = names(total_pop_quintile),
-        "Deaths prevented" = average_deaths_quintile |>
+        "Mortality Impact" = average_deaths_quintile |>
           unname()
       )
     )

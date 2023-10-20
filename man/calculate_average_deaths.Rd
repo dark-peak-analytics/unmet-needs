@@ -4,10 +4,10 @@
 \alias{calculate_average_deaths}
 \title{Calculate Average Number of Deaths Prevented by Deprivation Quintile}
 \usage{
-calculate_average_deaths(total_lives_saved_, imd_population_)
+calculate_average_deaths(total_deaths_, imd_population_)
 }
 \arguments{
-\item{total_lives_saved_}{Dataframe or data table representing the outputs of
+\item{total_deaths_}{Dataframe or data table representing the outputs of
 the \link[UnmetNeeds]{calculate_absolute_QALYs}.}
 
 \item{imd_population_}{Dataframe with population distribution by deprivation.}
@@ -26,7 +26,7 @@ QALYs.
 \examples{
 \dontrun{
 average_deaths <- calculate_average_deaths(
-  total_lives_saved_ = calculate_total_deaths(
+  total_deaths_ = calculate_total_deaths(
     mortality_rates_ = input_data_mQALE$`Mortality rate`[1:5],
     mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
     equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
@@ -37,7 +37,7 @@ average_deaths <- calculate_average_deaths(
   imd_population_ = CCG_IMD_population_2019
 )
 average_deaths_equ_elas <- calculate_average_deaths(
-  total_lives_saved_ = calculate_total_deaths(
+  total_deaths_ = calculate_total_deaths(
     mortality_rates_ = input_data_mQALE$`Mortality rate`[1:5],
     mortality_elasticity_ = input_data_mQALE$`Mortality elasticity`,
     equal_mortality_elasticity_ = input_data_mQALE$`Equal mortality elasticity`,
