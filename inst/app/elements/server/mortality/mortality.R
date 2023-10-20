@@ -324,22 +324,23 @@ output[["summary_total_deaths"]] <- shiny::renderUI(
 
     shiny::tagList(
       paste0(
-        "Average mortality impact per 100,000 population in England: ",
+        "Average mortality impact per 100,000 in England: ",
         round(outputs_rv[["average_deaths"]]) |>
           format(big.mark = ","),
         " deaths."
       ),
       shiny::br(),
       paste0(
-        "Modelled baseline mortality gap per 100,000 population in England: ",
-        round(outputs_rv[["health_inequality_gap_b_deaths"]], digits = 2) |>
+        "Modelled baseline mortality gap per 100,000 in England (most ",
+        "deprived minus least deprived): ",
+        round(outputs_rv[["health_inequality_gap_b_deaths"]] * -1, digits = 2) |>
           format(big.mark = ","),
         " deaths."
       ),
       shiny::br(),
       paste0(
-        "Impact on modelled mortality gap per 100,000 population in England: ",
-        round(outputs_rv[["health_inequality_gap_deaths"]], digits = 2) |>
+        "Impact on modelled mortality gap per 100,000 in England: ",
+        round(outputs_rv[["health_inequality_gap_deaths"]] * -1, digits = 2) |>
           format(big.mark = ","),
         " deaths."
       ),

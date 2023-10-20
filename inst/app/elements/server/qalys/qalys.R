@@ -350,7 +350,8 @@ output[["summary_absolute_QALYs"]] <- shiny::renderUI(
       ),
       shiny::br(),
       paste0(
-        "Modelled baseline QALE gap in England: ",
+        "Modelled baseline QALE gap in England (most deprived minus least ",
+        "deprived): ",
         round(outputs_rv[["health_inequality_gap_b_QALYs"]], digits = 1) |>
           format(big.mark = ","),
         " QALYs."
