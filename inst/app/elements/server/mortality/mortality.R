@@ -346,7 +346,7 @@ output[["summary_total_deaths"]] <- shiny::renderUI(
       ),
       shiny::br(),
       paste0(
-        "Total deaths in England: ",
+        "Impact on total deaths in England: ",
         round(outputs_rv[["total_deaths"]])  |>
           format(big.mark = ","),
         " deaths."
