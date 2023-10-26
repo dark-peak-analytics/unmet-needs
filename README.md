@@ -2,7 +2,7 @@
 
 This R package hosts the '**NHS Formula Health Inequality Impact Calculator**' shiny app. The _NHS Formula Health Inequality Impact Calculator_ shiny app allows interested users to visualise the national, regional and sub-regional health-related effects associated with changes in annual healthcare expenditure. For more information about the tool, please check the shiny app's '_About the tool_' section.
 
-This project was commissioned by [**Richard Cookson**](richard.cookson@york.ac.uk) at the University of York, and developed by [**Wael Mohammed**](https://github.com/W-Mohammed) at [**Dark Peak Analytics**](https://darkpeakanalytics.com/).
+This project was commissioned by **Richard Cookson** at the University of York, and developed by [**Wael Mohammed**](https://github.com/W-Mohammed) at [**Dark Peak Analytics**](https://darkpeakanalytics.com/).
 
 ```
 Project Structure 
@@ -75,6 +75,6 @@ Clicking on '**QALE impact**' loads the third and final tab.
 
 <img src="man/figures/QALE_tab.png" align="center" width="500" />
 
-Please [let us know](wmohammed@darkpeakanalytics.com) if you have any comments or questions about the project structure, code or workflow. If you have questions about the theory and/or methods employed to generate the results, please get in touch with [**Richard Cookson**](richard.cookson@york.ac.uk).
+Please [let us know](wmohammed@darkpeakanalytics.com) if you have any comments or questions about the project structure, code or workflow. If you have questions about the theory and/or methods employed to generate the results, please get in touch with **Richard Cookson**_richard.cookson@york.ac.uk_.
 
 [Wael Mohammed](https://github.com/W-Mohammed), [Dark Peak Analytics](https://darkpeakanalytics.com/).
