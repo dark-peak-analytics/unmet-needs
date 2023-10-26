@@ -75,6 +75,6 @@ Clicking on '**QALE impact**' loads the third and final tab.
 
 <img src="man/figures/QALE_tab.png" align="center" width="500" />
 
-Please [let us know](wmohammed@darkpeakanalytics.com) if you have any comments or questions about the project structure, code or workflow. If you have questions about the theory and/or methods employed to generate the results, please get in touch with **Richard Cookson**_richard.cookson@york.ac.uk_.
+Please [let us know](wmohammed@darkpeakanalytics.com) if you have any comments or questions about the project structure, code or workflow. If you have questions about the theory and/or methods employed to generate the results, please get in touch with **Richard Cookson** (_richard.cookson@york.ac.uk_).
 
 [Wael Mohammed](https://github.com/W-Mohammed), [Dark Peak Analytics](https://darkpeakanalytics.com/).
