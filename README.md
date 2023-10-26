@@ -1,4 +1,4 @@
-# Unmet Needs <img src="inst/app/www/dpa2.png" align="right" width="120" />
+# Unmet Needs <img src="man/figures/dpa2.png" align="right" width="120" />
 
 This R package hosts the '**NHS Formula Health Inequality Impact Calculator**' shiny app. The _NHS Formula Health Inequality Impact Calculator_ shiny app allows interested users to visualise the national, regional and sub-regional health-related effects associated with changes in annual healthcare expenditure. For more information about the tool, please check the shiny app's '_About the tool_' section.
 
@@ -61,7 +61,7 @@ run_UnmetNeeds_app()
 
 The web-based application starts with a landing page, during which required functions and data are loaded.
 
-<img src="man/figures/landing_page.PNG " align="center" width="500" />
+<img src="man/figures/landing_page.png " align="center" width="500" />
 
 The first tab in the shiny application is the '**Inputs**' tab. Users can study and/or change the assumptions and inputs employed in the calculations.
 
