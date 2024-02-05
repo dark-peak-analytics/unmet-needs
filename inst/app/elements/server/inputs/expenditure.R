@@ -246,7 +246,7 @@ shiny::observeEvent(
 
           # Round all numeric columns to 2 decimal places
           for (col in numeric_cols) {
-            tmp_df[[col]] <- round(tmp_df[[col]], 0) |>
+            tmp_df[[col]] <- round(tmp_df[[col]], 2) |>
               format(big.mark = ",")
           }
 
@@ -294,7 +294,7 @@ shiny::observeEvent(
 
           # Round all numeric columns to 2 decimal places
           for (col in numeric_cols) {
-            tmp_df[[col]] <- round(tmp_df[[col]], 0) |>
+            tmp_df[[col]] <- round(tmp_df[[col]], 2) |>
               format(big.mark = ",")
           }
 
