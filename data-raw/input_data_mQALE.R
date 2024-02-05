@@ -24,13 +24,13 @@ input_data_mQALE <-
       "Overall" = 1024
     ),
     "Mortality elasticity" = c( # from paper 2 (log-log model)
-      "Q1 - Most Deprived" = 0.00433,
-      "Q2" = 0.00768,
-      "Q3" = 0.00909,
-      "Q4" = 0.00941,
-      "Q5 - Least Deprived" = 0.00763
+      "Q1 - Most Deprived" = 0.00636,
+      "Q2" = 0.00757,
+      "Q3" = 0.01234,
+      "Q4" = 0.01058,
+      "Q5 - Least Deprived" = 0.00456
     ),
-    "Equal mortality elasticity" = 0.00763
+    "Equal mortality elasticity" = 0.00828
   )
 
 usethis::use_data(input_data_mQALE, overwrite = TRUE)
