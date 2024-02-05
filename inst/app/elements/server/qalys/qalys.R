@@ -40,14 +40,36 @@ target_maximum_QALE <- shiny::reactive({
   inputs_rv[["HRQoL_inputs_2"]][input$target_maximum_QALE |> unname(),]
 })
 
+imd_population <- shiny::reactive({
+
+  entity <- grep(
+    x =  colnames(inputs_rv[["IMD_population"]]),
+    pattern = "nm",
+    ignore.case = TRUE,
+    value = TRUE
+  )
+
+  imd_population <- merge(
+    x = subset(
+      x = inputs_rv[["IMD_population"]],
+      select = -`Expenditure change (%)`
+    ),
+    y = subset(
+      x = inputs_rv[["expenditure_df"]],
+      select = c(inputs_rv[["entity"]], "Expenditure change (%)")
+    ),
+    by.x = entity,
+    by.y = inputs_rv[["entity"]]
+  )
+
+  imd_population
+})
+
 # Estimate Average QALYs -------------------------------------------------------
 
 average_QALYs <- shiny::reactiveValues()
 
 shiny::observe({
-  imd_pop_data <- inputs_rv[["IMD_population"]]
-  imd_pop_data[["Expenditure change (%)"]] <- input$pcnt_change
-
   average_QALYs[["data"]] <- UnmetNeeds::calculate_average_QALYs(
     absolute_QALYs_ = UnmetNeeds::calculate_absolute_QALYs(
       target_maximum_health_ = target_maximum_QALE(),
@@ -55,10 +77,10 @@ shiny::observe({
       mortality_elasticity_ = inputs_rv[["mortality_elasticity"]],
       equal_mortality_elasticity_ = inputs_rv[["equal_mortality_elasticity"]],
       option_ = maximum_QALE_option(),
-      imd_population_ = imd_pop_data,
+      imd_population_ = imd_population(),
       provider_ = inputs_rv[["entity"]]
     )$data[[1]],
-    imd_population_ = imd_pop_data
+    imd_population_ = imd_population()
   )
 })
 
@@ -125,31 +147,6 @@ output[["plot_average_QALYs"]] <- shiny::renderPlot(
 
 absolute_QALYs <- shiny::reactiveValues()
 
-imd_population <- shiny::reactive({
-
-  entity <- grep(
-    x =  colnames(inputs_rv[["IMD_population"]]),
-    pattern = "nm",
-    ignore.case = TRUE,
-    value = TRUE
-  )
-
-  imd_population <- merge(
-    x = subset(
-      x = inputs_rv[["IMD_population"]],
-      select = -`Expenditure change (%)`
-    ),
-    y = subset(
-      x = inputs_rv[["expenditure_df"]],
-      select = c(inputs_rv[["entity"]], "Expenditure change (%)")
-    ),
-    by.x = entity,
-    by.y = inputs_rv[["entity"]]
-  )
-
-  imd_population
-})
-
 shiny::observe({
   absolute_QALYs[["national"]] <- UnmetNeeds::calculate_absolute_QALYs(
     target_maximum_health_ = target_maximum_QALE(),
@@ -169,6 +166,9 @@ absolute_QALYs_map <- shiny::reactive({
   value_df <- absolute_QALYs[["national"]]$data[[1]]
   names(value_df)[
     names(value_df) == "Average change (100,000 population)"] <- "Value"
+
+  # Convert Life Expectancy (LE) QALYs to per annum QALYs assuming 80 years LE:
+  value_df[["Value"]] <- value_df[["Value"]] / 80
 
   # Ensure SP data is the same as the value_df; i.e. subset as needed
   sp_df <- inputs_rv[["spdf_2019"]]
@@ -411,7 +411,7 @@ output[["subtitle_map_absolute_QALYs"]] <- shiny::renderText(
     shiny::req(absolute_QALYs[["national"]])
 
     paste0(
-      "QALYs per 100,000 Population in ",
+      "QALYs per year per 100,000 Population in ",
       inputs_rv[["entity"]]
     )
   }

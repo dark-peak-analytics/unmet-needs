@@ -55,6 +55,9 @@ calculate_average_deaths <- function(
   average_deaths_quintile <-
     (total_deaths_quintile / total_pop_quintile) * 1e5
 
+  ## Estimate average percentage change in healthcare expenditure:
+  average_percent_change <- mean(imd_population_$`Expenditure change (%)`)
+
   return(
     list(
       "title" = paste0(
@@ -65,7 +68,7 @@ calculate_average_deaths <- function(
       ),
       "caption" = paste0(
         "Mortality impact estimated assuming ",
-        imd_population_$`Expenditure change (%)`[[1]],
+        round(average_percent_change, digits = 2),
         "% change in national healthcare expenditure."
       ),
       "data" = data.table::data.table(

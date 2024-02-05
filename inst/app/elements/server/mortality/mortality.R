@@ -34,24 +34,48 @@ waiter_deaths_table <- waiter::Waiter$new(
   hide_on_render  = TRUE
 )
 
+# Convert input variables to reactives -----------------------------------------
+
+imd_population <- shiny::reactive({
+
+  entity <- grep(
+    x =  colnames(inputs_rv[["IMD_population"]]),
+    pattern = "nm",
+    ignore.case = TRUE,
+    value = TRUE
+  )
+
+  imd_population <- merge(
+    x = subset(
+      x = inputs_rv[["IMD_population"]],
+      select = -`Expenditure change (%)`
+    ),
+    y = subset(
+      x = inputs_rv[["expenditure_df"]],
+      select = c(inputs_rv[["entity"]], "Expenditure change (%)")
+    ),
+    by.x = entity,
+    by.y = inputs_rv[["entity"]]
+  )
+
+  imd_population
+})
+
 # Estimate Average Deaths ------------------------------------------------------
 
 average_deaths <- shiny::reactiveValues()
 
 shiny::observe({
-  imd_pop_data <- inputs_rv[["IMD_population"]]
-  imd_pop_data[["Expenditure change (%)"]] <- input$pcnt_change
-
   average_deaths[["data"]] <- UnmetNeeds::calculate_average_deaths(
     total_deaths_ = UnmetNeeds::calculate_total_deaths(
       mortality_rates_ = inputs_rv[["mortality_rates"]],
       mortality_elasticity_ = inputs_rv[["mortality_elasticity"]],
       equal_mortality_elasticity_ = inputs_rv[["equal_mortality_elasticity"]],
       option_ = maximum_QALE_option(),
-      imd_population_ = imd_pop_data,
+      imd_population_ = imd_population(),
       provider_ = inputs_rv[["entity"]]
     )$data,
-    imd_population_ = imd_pop_data
+    imd_population_ = imd_population()
   )
 })
 
@@ -117,31 +141,6 @@ output[["plot_average_deaths"]] <- shiny::renderPlot(
 # Estimate Total Deaths --------------------------------------------------------
 
 total_deaths <- shiny::reactiveValues()
-
-imd_population <- shiny::reactive({
-
-  entity <- grep(
-    x =  colnames(inputs_rv[["IMD_population"]]),
-    pattern = "nm",
-    ignore.case = TRUE,
-    value = TRUE
-  )
-
-  imd_population <- merge(
-    x = subset(
-      x = inputs_rv[["IMD_population"]],
-      select = -`Expenditure change (%)`
-    ),
-    y = subset(
-      x = inputs_rv[["expenditure_df"]],
-      select = c(inputs_rv[["entity"]], "Expenditure change (%)")
-    ),
-    by.x = entity,
-    by.y = inputs_rv[["entity"]]
-  )
-
-  imd_population
-})
 
 shiny::observe({
   total_deaths[["national"]] <- UnmetNeeds::calculate_total_deaths(

@@ -58,6 +58,9 @@ calculate_average_QALYs <- function(
   average_QALYs_change_quintile <-
     (total_QALYs_change_quintile / total_pop_quintile)
 
+  ## Estimate average percentage change in healthcare expenditure:
+  average_percent_change <- mean(imd_population_$`Expenditure change (%)`)
+
   return(
     list(
       "title" = paste0(
@@ -68,7 +71,7 @@ calculate_average_QALYs <- function(
       ),
       "caption" = paste0(
         "Average QALYs estimated assuming ",
-        imd_population_$`Expenditure change (%)`[[1]],
+        round(average_percent_change, digits = 2),
         "% change in national healthcare expenditure."
       ),
       "data" = data.table::data.table(
