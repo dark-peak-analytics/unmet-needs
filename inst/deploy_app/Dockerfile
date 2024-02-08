@@ -22,8 +22,9 @@ RUN apt-get update && \
     apt-get clean
 
 # Install package remotes [to allow installGithub.r for github packages]:
-RUN install2.r data.table remotes devtools rlang rmapshaper sf sp here \
-    methods assertthat leaflet leaflet.extras DT \
+RUN install2.r data.table remotes devtools rlang rmapshaper sf sp plyr here \
+    methods assertthat leaflet leaflet.extras leafem leafpop mapview DT waiter \
+    webshot satellite servr svglite\
     shinydashboard shinyWidgets shinyjs
 
 # Create a working directory in the image:
