@@ -1,0 +1,37 @@
+name: Run on push to dev
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push to the dev branch.
+  push:
+    branches:
+      - dev
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # build the docker image and give it the name main
+      - name: Build image
+        run: docker build -t dev -f inst/deploy_app/Dockerfile .
+      # run the docker image supply the secrets from the github secrets store.
+      - name: execute
+        run: >
+          docker run
+          -e SHINY_ACC_NAME=${{secrets.SHINY_ACC_NAME}}
+          -e SHINY_ACC_TOKEN=${{secrets.SHINY_ACC_TOKEN}}
+          -e SHINY_ACC_SECRET=${{secrets.SHINY_ACC_SECRET}}
+          -e SHINY_APP_NAME="unmetneeds"
+          -e BRANCH_NAME="dev"
+          dev
