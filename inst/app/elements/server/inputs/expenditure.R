@@ -339,10 +339,36 @@ output[["nhs_orgs"]] <- shiny::downloadHandler(
     write.csv(
       file = file,
       x = {
-        inputs_rv[["expenditure_df"]]  |>
+        # Get nhs_orgs codes:
+        orgs_codes_df <- UnmetNeeds::CCG_IMD_population_2019 |>
+          base::subset(
+            select = c(
+              grep(
+                pattern = "CDH",
+                x = colnames(CCG_IMD_population_2019)
+              ),
+              grep(
+                pattern = "NM",
+                x = colnames(CCG_IMD_population_2019)
+              )
+            )
+          )
+
+        colnames(orgs_codes_df)[2] <- inputs_rv[["entity"]]
+
+        selected_orgs_df <- inputs_rv[["expenditure_df"]]  |>
           base::subset(
             select = c(inputs_rv[["entity"]], "Expenditure change (%)")
           )
+
+        merge(
+          x = orgs_codes_df,
+          y = selected_orgs_df,
+          by = inputs_rv[["entity"]],
+          all.x = FALSE,
+          all.y = TRUE
+        ) |>
+          _[, c(colnames(orgs_codes_df)[1], colnames(selected_orgs_df))]
       }
     )
   }
