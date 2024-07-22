@@ -1,0 +1,104 @@
+# Get the rocker image, latest shiny from rocker in this case:
+# Base image https://hub.docker.com/u/rocker/
+# For latest version use: FROM rocker/shiny:latest
+FROM rocker/shiny-verse:4.3
+
+# system libraries of general use
+## install debian packages
+RUN apt-get update -qq && apt-get -y --no-install-recommends install \
+    libxml2-dev \
+    libcairo2-dev \
+    libsqlite3-dev \
+    libmysqlclient-dev \
+    libpq-dev \
+    libssh2-1-dev \
+    unixodbc-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libudunits2-dev \               
+    libgdal-dev \                
+    gdal-bin \                   
+    libgeos-dev \                
+    libproj-dev \                
+    lbzip2                       
+
+# Install package remotes [to allow installGithub.r for github packages]:
+RUN install2.r \
+	data.table \
+	remotes \
+	devtools \ 
+	rlang \ 
+	rmapshaper \
+	sf \
+	sp \
+	plyr \
+	here \ 
+	methods \
+	assertthat \
+	leaflet \
+	leaflet.extras \
+	leafem \
+	leafpop \
+	mapview \
+	DT \
+	waiter \
+	webshot \
+	satellite \
+	servr \
+	svglite \
+	shinydashboard \
+	shinyWidgets \
+	shinyjs
+
+# update system libraries
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get clean
+
+# Copy the folder "app" (containing the shiny app) to the server directory:
+COPY ./inst/app/ /srv/shiny-server/unmetneeds/
+
+# Copy the local package:
+COPY ./ /home/Unmet_Needs/
+
+# Switch working directory to install copied package:
+WORKDIR /home/Unmet_Needs/
+
+# Install copied package:
+RUN R -e "devtools::install()"
+
+# Copy the Shiny server configuration file
+COPY ./inst/deploy_app/shiny-server.conf /etc/shiny-server/shiny-server.conf
+
+# Set permissions for the log directory
+RUN chown shiny:shiny /var/log/shiny-server
+
+# Set permissions for the Shiny server directory
+RUN chown -R shiny:shiny /srv/shiny-server
+
+### Notes:
+## To build this file with the name "test1":
+# 1. make sure this file is on project root
+# 2. navigate to R's local terminal and execute:
+# docker build -t test1 -f deploy-shiny/DockerfileDev .
+# 3. if the docker file was in root directory:
+# docker build -t test1 .
+# 4. if the build exists, this can be overriden:
+# docker build --no-cache -t test1 -f deploy-shiny/DockerfileDev .
+
+## To run the image from the same terminal:
+# 1. if the imaage require environment vars and stored in ".Renviron"
+# docker run --env-file .Renviron test1
+
+## In github actions (if test1 was the image name):
+# docker build -t test1 -f deploy-shiny/DockerfileDev .
+
+## To deploy in Linode:
+# 1. Build the image from terminal while in the 'unmet_needs' folder:
+# docker build -t unmetneeds -f \
+#   ./inst/deploy_app/DockerfileLinode .
+# 2. Run a container from the image unmetneeds:
+# docker run -p 3838:3838 \
+#   -v /home/log/shiny-server/:/var/log/shiny-server/ \
+#   unmetneeds
+# http://139.162.233.246:3838/unmetneeds/
